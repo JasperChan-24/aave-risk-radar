@@ -1,0 +1,242 @@
+{
+  "schema_version": 2,
+  "inputs": {
+    "snapshot_path": "snapshots/1-ed0c6079229e2d407672a117c22b62064f4a4312-block-25573974.json",
+    "snapshot_sha256": "3feb4f279eddef5383cbaae072d3fdd0c59bcbb801e7f593f92111af1d4690f5",
+    "history_path": "data/history/ethereum-v3-whale-block-25573974.csv",
+    "history_sha256": "c1cf01f6d160650d19db29221229daf43335bd65a50160b06199b8ca9c44e0e0",
+    "history_rows": 366,
+    "history_start_date": "2025-07-20",
+    "history_end_date": "2026-07-20",
+    "chain_id": 1,
+    "block_number": 25573974,
+    "block_hash": "0x626780b3e20464c19f2f746710aa2e9b6256f20b326bace0fb2bed42d5b17c9d",
+    "block_timestamp": 1784551079,
+    "pool_revision": 11,
+    "oracle": "0x54586bE62E3c3580375aE3723C145253060Ca0C2",
+    "user": "0xEd0C6079229E2d407672a117c22b62064f4a4312",
+    "user_emode_category": 0,
+    "emode_data_complete": true
+  },
+  "provenance": {
+    "generator": {
+      "path": "scripts/run_fixed_analysis.py",
+      "sha256": "0ba70bcea677d0bab4460115c7d91182540cffd14acc1a2fcaac606dce7e3821"
+    },
+    "source_tree": {
+      "root": "src/aave_risk_monitor",
+      "sha256": "1a551da7213d1dcb22bbfb4319ce4c79465cca055e8ed2393115113eb3daac58",
+      "algorithm": "sha256-source-tree-v1:path-nul-size-nul-content-nul",
+      "file_count": 20,
+      "files": [
+        "__init__.py",
+        "app/__init__.py",
+        "app/demo.py",
+        "app/i18n.py",
+        "app/main.py",
+        "app/services.py",
+        "config.py",
+        "data/__init__.py",
+        "data/abis.py",
+        "data/history.py",
+        "data/onchain.py",
+        "data/snapshots.py",
+        "domain.py",
+        "models/__init__.py",
+        "models/liquidation.py",
+        "models/pnl.py",
+        "simulation/__init__.py",
+        "simulation/calibration.py",
+        "simulation/engine.py",
+        "simulation/metrics.py"
+      ]
+    },
+    "runtime": {
+      "python": {
+        "implementation": "CPython",
+        "version": "3.12.4"
+      },
+      "packages": {
+        "numpy": "2.5.1",
+        "pandas": "2.3.3",
+        "sklearn": "1.9.0"
+      }
+    }
+  },
+  "portfolio": {
+    "calculated_health_factor": "4.27332204889186415400573044040262503134288727379014336845324",
+    "onchain_health_factor": "4.273322048891862594",
+    "collateral_value_usd": "90753448.23919924040125639808",
+    "debt_value_usd": "17626886.3373094836455591"
+  },
+  "simulation_config": {
+    "n_paths": 20000,
+    "horizon_steps": 30,
+    "step_size_days": 1.0,
+    "seed": 20260720,
+    "chunk_size": 2000,
+    "stored_paths": 200,
+    "liquidation_rule": "health_factor_strictly_below_1",
+    "liquidation_boundary_guard_ulps": 8.0,
+    "drift_mode": "zero",
+    "tail_confidence_levels": [
+      0.95,
+      0.99
+    ],
+    "bootstrap_resamples": 500,
+    "interval_confidence_level": 0.95
+  },
+  "calibration": {
+    "observations": 365,
+    "periods_per_year": 365.0,
+    "estimator": "sample-volatility-ledoit-wolf-correlation",
+    "shrinkage": 0.04705328647963385,
+    "asset_addresses": [
+      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "0xdac17f958d2ee523a2206206994597c13d831ec7"
+    ],
+    "daily_mean_log_returns": [
+      -0.0018849205909757807,
+      -0.0016436837815598526,
+      -3.198793355739485e-06
+    ],
+    "daily_covariance": [
+      [
+        0.0010478606810617487,
+        0.0005901010844013712,
+        1.2989337696144288e-06
+      ],
+      [
+        0.0005901010844013712,
+        0.00047503220909273235,
+        1.102676895527045e-06
+      ],
+      [
+        1.298933769614429e-06,
+        1.102676895527045e-06,
+        5.247251310064847e-08
+      ]
+    ],
+    "correlation": [
+      [
+        1.0,
+        0.8363982426477877,
+        0.17517386129961876
+      ],
+      [
+        0.8363982426477877,
+        1.0,
+        0.22086190500341504
+      ],
+      [
+        0.17517386129961876,
+        0.22086190500341504,
+        1.0
+      ]
+    ],
+    "annualized_volatility": [
+      0.6184409014510104,
+      0.4163973538806981,
+      0.004376353194354483
+    ]
+  },
+  "risk_results": {
+    "liquidation_probability": {
+      "value": 0.0,
+      "confidence_interval": {
+        "lower": 0.0,
+        "upper": 0.00019203605610462545,
+        "confidence_level": 0.95,
+        "method": "wilson"
+      }
+    },
+    "cumulative_liquidation_probability": {
+      "1": {
+        "value": 0.0,
+        "interval_95_lower": 0.0,
+        "interval_95_upper": 0.00019203605610462545
+      },
+      "7": {
+        "value": 0.0,
+        "interval_95_lower": 0.0,
+        "interval_95_upper": 0.00019203605610462545
+      },
+      "30": {
+        "value": 0.0,
+        "interval_95_lower": 0.0,
+        "interval_95_upper": 0.00019203605610462545
+      }
+    },
+    "time_to_liquidation": {
+      "observed_liquidations": 0,
+      "right_censored_paths": 20000,
+      "conditional_mean_days": null,
+      "conditional_median_days": null,
+      "conditional_p05_days": null,
+      "conditional_p95_days": null
+    },
+    "terminal_mark_to_market_tail_risk": [
+      {
+        "confidence_level": 0.95,
+        "value_at_risk_usd": {
+          "value": 22903521.400003426,
+          "confidence_interval": {
+            "lower": 22619171.120659553,
+            "upper": 23257460.883832388,
+            "confidence_level": 0.95,
+            "method": "percentile-bootstrap"
+          }
+        },
+        "expected_shortfall_usd": {
+          "value": 27248421.80601338,
+          "confidence_interval": {
+            "lower": 26905869.701676756,
+            "upper": 27575763.824822567,
+            "confidence_level": 0.95,
+            "method": "percentile-bootstrap"
+          }
+        }
+      },
+      {
+        "confidence_level": 0.99,
+        "value_at_risk_usd": {
+          "value": 30050609.725132626,
+          "confidence_interval": {
+            "lower": 29564300.588527676,
+            "upper": 30419459.617866408,
+            "confidence_level": 0.95,
+            "method": "percentile-bootstrap"
+          }
+        },
+        "expected_shortfall_usd": {
+          "value": 33264752.87292557,
+          "confidence_interval": {
+            "lower": 32678434.20392314,
+            "upper": 33814476.20226392,
+            "confidence_level": 0.95,
+            "method": "percentile-bootstrap"
+          }
+        }
+      }
+    ]
+  },
+  "scope": {
+    "positions": "fixed token quantities over the horizon",
+    "liquidation_probability": "daily discrete first passage",
+    "liquidation_numerical_boundary": "strict HF < 1 after an 8-ULP guard against binary floating-point portfolio-summation noise",
+    "tail_risk": "pre-liquidation terminal mark-to-market; no post-trigger transition",
+    "intervals": "Monte Carlo sampling uncertainty only",
+    "historical_oracle_address": {
+      "address": "0x54586bE62E3c3580375aE3723C145253060Ca0C2",
+      "csv_rows_match_snapshot_oracle": true,
+      "provider_oracle_resolved_at_each_historical_block": false,
+      "assumption": "historical observations query the fixed snapshot oracle contract; PoolAddressesProvider.getPriceOracle is not re-resolved at each historical block"
+    },
+    "emode_metadata": {
+      "complete": true,
+      "user_category": 0,
+      "execution_policy": "risk simulation fails closed when metadata is incomplete"
+    }
+  }
+}

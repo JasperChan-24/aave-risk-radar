@@ -1,5 +1,1 @@
-streamlit
-web3
-python-dotenv
-numpy
-pandas
+-e .
