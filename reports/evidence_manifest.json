@@ -199,7 +199,7 @@
         "**/__pycache__/**",
         "**/*.pyc"
       ],
-      "sha256": "7b2f3b7b335571891225e8880ab0b9ec7abfee2cd9ab8a2ad70392c0836593d2",
+      "sha256": "527bb9704e52dc5cdeaa4ec420f3afd073c126a34842175eb2d3ff8e093feeb3",
       "file_count": 15,
       "files": [
         "fixtures/portfolio_snapshot.json",

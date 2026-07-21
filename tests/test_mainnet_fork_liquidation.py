@@ -14,6 +14,16 @@ SCRIPT = ROOT / "scripts" / "run_fork_validation.py"
 
 
 def test_fork_runner_fails_closed_when_anvil_is_unavailable(tmp_path: Path) -> None:
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "ETHEREUM_ARCHIVE_RPC_URL": "",
+            "ETHEREUM_RPC_URL": "",
+            # Keep the test on the missing-Anvil branch in environments that do
+            # not have a repository-local .env file, such as GitHub Actions.
+            "ALCHEMY_RPC_URL": "http://127.0.0.1:1",
+        }
+    )
     result = subprocess.run(
         [
             sys.executable,
@@ -28,6 +38,7 @@ def test_fork_runner_fails_closed_when_anvil_is_unavailable(tmp_path: Path) -> N
         capture_output=True,
         timeout=30,
         check=False,
+        env=environment,
     )
     assert result.returncode == 2
     assert "not completed" in result.stdout
