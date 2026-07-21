@@ -1,0 +1,1595 @@
+{
+  "schema_version": 1,
+  "evidence_timestamp": "2026-07-20T12:37:59+00:00",
+  "inputs": {
+    "snapshot_path": "snapshots/1-ed0c6079229e2d407672a117c22b62064f4a4312-block-25573974.json",
+    "snapshot_sha256": "3feb4f279eddef5383cbaae072d3fdd0c59bcbb801e7f593f92111af1d4690f5",
+    "history_path": "data/history/ethereum-v3-whale-block-25573974.csv",
+    "history_sha256": "c1cf01f6d160650d19db29221229daf43335bd65a50160b06199b8ca9c44e0e0",
+    "history_rows": 366,
+    "history_start_date": "2025-07-20",
+    "history_end_date": "2026-07-20",
+    "asset_addresses": [
+      "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "0xdac17f958d2ee523a2206206994597c13d831ec7"
+    ],
+    "asset_symbols": [
+      "WETH",
+      "WBTC",
+      "USDT"
+    ],
+    "chain_id": 1,
+    "block_number": 25573974,
+    "block_hash": "0x626780b3e20464c19f2f746710aa2e9b6256f20b326bace0fb2bed42d5b17c9d",
+    "user": "0xEd0C6079229E2d407672a117c22b62064f4a4312"
+  },
+  "provenance": {
+    "generator_path": "scripts/run_empirical_validation.py",
+    "generator_sha256": "9cdd49458a0a7afb6cdbd3a38c95094c2651100349a2b510049b753236044ec8",
+    "runtime": {
+      "python": {
+        "implementation": "CPython",
+        "version": "3.12.4"
+      },
+      "packages": {
+        "numpy": "2.5.1",
+        "pandas": "2.3.3",
+        "sklearn": "1.9.0"
+      }
+    },
+    "determinism": {
+      "base_seed": 20260721,
+      "convergence_paths": 20000,
+      "stress_paths": 20000,
+      "backtest_paths_per_forecast": 4000
+    }
+  },
+  "validation_portfolios": {
+    "actual_fixed_snapshot": {
+      "purpose": "rolling one-day VaR backtest",
+      "health_factor": 4.273322048891864,
+      "collateral_value_usd": 90753448.23919924,
+      "debt_value_usd": 17626886.337309483,
+      "position_rule": "current token quantities held fixed across history"
+    },
+    "near_boundary_counterfactual": {
+      "purpose": "convergence and stress sensitivity",
+      "construction": "multiply every debt token quantity by one common factor; preserve collateral, debt composition, thresholds, spot, and history",
+      "source_health_factor": 4.273322048891863,
+      "target_health_factor": 1.05,
+      "realized_initial_health_factor": 1.0500000000000003,
+      "debt_quantity_scale": 4.069830522754155,
+      "is_observed_account": false
+    }
+  },
+  "results": {
+    "time_step_convergence": {
+      "method": "production correlated-GBM simulator; finest grid is reference",
+      "horizon_days": 30.0,
+      "n_paths_per_grid": 20000,
+      "seed_per_grid": 20260721,
+      "results": [
+        {
+          "step_size_days": 1.0,
+          "horizon_steps": 30,
+          "liquidation_probability": 0.67555,
+          "liquidation_probability_ci_lower": 0.6690284516613123,
+          "liquidation_probability_ci_upper": 0.6820041244793893,
+          "value_at_risk_usd": 19503804.6552617,
+          "expected_shortfall_usd": 23059564.213917155,
+          "liquidation_probability_ci_width": 0.012975672818076989
+        },
+        {
+          "step_size_days": 0.5,
+          "horizon_steps": 60,
+          "liquidation_probability": 0.70265,
+          "liquidation_probability_ci_lower": 0.696276718932742,
+          "liquidation_probability_ci_upper": 0.7089454488537187,
+          "value_at_risk_usd": 19611628.359604977,
+          "expected_shortfall_usd": 23154881.265954427,
+          "liquidation_probability_ci_width": 0.012668729920976673
+        },
+        {
+          "step_size_days": 0.25,
+          "horizon_steps": 120,
+          "liquidation_probability": 0.70995,
+          "liquidation_probability_ci_lower": 0.7036211303869369,
+          "liquidation_probability_ci_upper": 0.7161982336731048,
+          "value_at_risk_usd": 19403016.44259387,
+          "expected_shortfall_usd": 22925638.86443568,
+          "liquidation_probability_ci_width": 0.012577103286167901
+        }
+      ],
+      "comparison": {
+        "candidate_step_size_days": 0.5,
+        "reference_step_size_days": 0.25,
+        "differences": {
+          "liquidation_probability_absolute": 0.007299999999999973,
+          "value_at_risk_relative": 0.01075151987982443,
+          "expected_shortfall_relative": 0.009999389891566717
+        },
+        "thresholds": {
+          "liquidation_probability_absolute": 0.025,
+          "value_at_risk_relative": 0.05,
+          "expected_shortfall_relative": 0.075
+        },
+        "checks": {
+          "liquidation_probability_absolute": true,
+          "value_at_risk_relative": true,
+          "expected_shortfall_relative": true
+        },
+        "passed": true
+      }
+    },
+    "path_count_convergence": {
+      "method": "nested seeded path prefixes; largest path count is reference",
+      "horizon_days": 30,
+      "seed_per_run": 20260722,
+      "results": [
+        {
+          "n_paths": 2000,
+          "liquidation_probability": 0.6865,
+          "liquidation_probability_ci_lower": 0.6658271949091686,
+          "liquidation_probability_ci_upper": 0.7064577464549239,
+          "value_at_risk_usd": 19525910.69236506,
+          "expected_shortfall_usd": 22956992.902003493,
+          "liquidation_probability_ci_width": 0.040630551545755234
+        },
+        {
+          "n_paths": 8000,
+          "liquidation_probability": 0.676625,
+          "liquidation_probability_ci_lower": 0.6662921851887438,
+          "liquidation_probability_ci_upper": 0.6867882718067637,
+          "value_at_risk_usd": 19579588.602122195,
+          "expected_shortfall_usd": 22951765.23739736,
+          "liquidation_probability_ci_width": 0.020496086618019937
+        },
+        {
+          "n_paths": 32000,
+          "liquidation_probability": 0.67665625,
+          "liquidation_probability_ci_lower": 0.6715103623703859,
+          "liquidation_probability_ci_upper": 0.6817597291137073,
+          "value_at_risk_usd": 19593376.488459893,
+          "expected_shortfall_usd": 23222103.763381097,
+          "liquidation_probability_ci_width": 0.010249366743321442
+        }
+      ],
+      "comparison": {
+        "candidate_n_paths": 8000,
+        "reference_n_paths": 32000,
+        "differences": {
+          "liquidation_probability_absolute": 3.124999999992717e-05,
+          "value_at_risk_relative": 0.0007037013934692826,
+          "expected_shortfall_relative": 0.011641431316400901
+        },
+        "thresholds": {
+          "liquidation_probability_absolute": 0.02,
+          "value_at_risk_relative": 0.05,
+          "expected_shortfall_relative": 0.075
+        },
+        "checks": {
+          "liquidation_probability_absolute": true,
+          "value_at_risk_relative": true,
+          "expected_shortfall_relative": true,
+          "liquidation_probability_ci_contracts": true
+        },
+        "passed": true
+      }
+    },
+    "calibration_window_convergence": {
+      "method": "trailing daily log-return windows; longest window is reference",
+      "asset_names": [
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+        "0xdac17f958d2ee523a2206206994597c13d831ec7"
+      ],
+      "horizon_days": 30,
+      "n_paths_per_window": 20000,
+      "seed_per_window": 20260723,
+      "results": [
+        {
+          "calibration_window_days": 90,
+          "observations": 90,
+          "annualized_volatility": [
+            0.5048676641879182,
+            0.3493919173524236,
+            0.004307580315930521
+          ],
+          "correlation": [
+            [
+              1.0,
+              0.7951317749111169,
+              0.22504830185870398
+            ],
+            [
+              0.7951317749111169,
+              1.0,
+              0.27288913721331753
+            ],
+            [
+              0.22504830185870398,
+              0.27288913721331753,
+              1.0
+            ]
+          ],
+          "shrinkage": 0.09722307408265861,
+          "liquidation_probability": 0.62085,
+          "liquidation_probability_ci_lower": 0.6141033320755562,
+          "liquidation_probability_ci_upper": 0.6275502528096832,
+          "value_at_risk_usd": 16109519.421114856,
+          "expected_shortfall_usd": 19478265.406643454,
+          "liquidation_probability_ci_width": 0.01344692073412701
+        },
+        {
+          "calibration_window_days": 180,
+          "observations": 180,
+          "annualized_volatility": [
+            0.6068125539929117,
+            0.43498028104544584,
+            0.004607723346836599
+          ],
+          "correlation": [
+            [
+              1.0,
+              0.83865034460909,
+              0.17199147026310252
+            ],
+            [
+              0.83865034460909,
+              1.0,
+              0.21818894359009286
+            ],
+            [
+              0.17199147026310252,
+              0.21818894359009286,
+              1.0
+            ]
+          ],
+          "shrinkage": 0.08350947631170832,
+          "liquidation_probability": 0.6683,
+          "liquidation_probability_ci_lower": 0.6617430609235534,
+          "liquidation_probability_ci_upper": 0.6747922997399617,
+          "value_at_risk_usd": 18597006.026369922,
+          "expected_shortfall_usd": 22274045.135545965,
+          "liquidation_probability_ci_width": 0.013049238816408293
+        },
+        {
+          "calibration_window_days": 365,
+          "observations": 365,
+          "annualized_volatility": [
+            0.6184409014510104,
+            0.4163973538806981,
+            0.004376353194354483
+          ],
+          "correlation": [
+            [
+              1.0,
+              0.8363982426477877,
+              0.17517386129961876
+            ],
+            [
+              0.8363982426477877,
+              1.0,
+              0.22086190500341504
+            ],
+            [
+              0.17517386129961876,
+              0.22086190500341504,
+              1.0
+            ]
+          ],
+          "shrinkage": 0.04705328647963385,
+          "liquidation_probability": 0.67775,
+          "liquidation_probability_ci_lower": 0.6712395403992883,
+          "liquidation_probability_ci_upper": 0.6841921907827664,
+          "value_at_risk_usd": 19176706.26885671,
+          "expected_shortfall_usd": 22955542.13990536,
+          "liquidation_probability_ci_width": 0.012952650383478037
+        }
+      ],
+      "comparison": {
+        "candidate_window_days": 180,
+        "reference_window_days": 365,
+        "differences": {
+          "max_annualized_volatility_relative": 0.05286825404781861,
+          "max_correlation_absolute": 0.003182391036516241,
+          "liquidation_probability_absolute": 0.009449999999999958,
+          "value_at_risk_relative": 0.03022939572413604,
+          "expected_shortfall_relative": 0.029687689369561714
+        },
+        "thresholds": {
+          "max_annualized_volatility_relative": 0.3,
+          "max_correlation_absolute": 0.25,
+          "liquidation_probability_absolute": 0.1,
+          "value_at_risk_relative": 0.25,
+          "expected_shortfall_relative": 0.25
+        },
+        "checks": {
+          "max_annualized_volatility_relative": true,
+          "max_correlation_absolute": true,
+          "liquidation_probability_absolute": true,
+          "value_at_risk_relative": true,
+          "expected_shortfall_relative": true
+        },
+        "passed": true
+      }
+    },
+    "rolling_out_of_sample_var_backtest": {
+      "method": "rolling one-day production-simulator VaR; calibration ends at forecast origin; strict breach when actual loss > VaR",
+      "calibration_window_days": 180,
+      "confidence_level": 0.95,
+      "n_paths_per_forecast": 4000,
+      "base_seed": 20260724,
+      "forecast_start_date": "2026-01-17",
+      "forecast_end_date": "2026-07-20",
+      "observations": 185,
+      "breaches": 11,
+      "expected_breaches": 9.250000000000009,
+      "breach_rate": 0.05945945945945946,
+      "expected_breach_rate": 0.050000000000000044,
+      "mean_forecast_var_usd": 5248052.497543257,
+      "median_forecast_var_usd": 5250928.454416109,
+      "mean_actual_loss_usd": 353852.5432932137,
+      "maximum_actual_loss_usd": 11197304.900627509,
+      "kupiec_unconditional_coverage": {
+        "statistic": 0.329461314295429,
+        "p_value": 0.565976458018142,
+        "passed_at_5pct": true
+      },
+      "christoffersen_independence": {
+        "statistic": 10.266968201395628,
+        "p_value": 0.0013543317704320108,
+        "passed_at_5pct": false
+      },
+      "forecast_observations": [
+        {
+          "date": "2026-01-17",
+          "forecast_var_usd": 8442069.512803767,
+          "actual_loss_usd": -131786.63942816854,
+          "breach": false
+        },
+        {
+          "date": "2026-01-18",
+          "forecast_var_usd": 8250675.773062404,
+          "actual_loss_usd": -1090438.3209155798,
+          "breach": false
+        },
+        {
+          "date": "2026-01-19",
+          "forecast_var_usd": 8238253.93173668,
+          "actual_loss_usd": 4578586.503616124,
+          "breach": false
+        },
+        {
+          "date": "2026-01-20",
+          "forecast_var_usd": 7902890.596097047,
+          "actual_loss_usd": 5217615.14384076,
+          "breach": false
+        },
+        {
+          "date": "2026-01-21",
+          "forecast_var_usd": 7801386.578166383,
+          "actual_loss_usd": 9504330.696633428,
+          "breach": true
+        },
+        {
+          "date": "2026-01-22",
+          "forecast_var_usd": 7527641.171701749,
+          "actual_loss_usd": -3890803.2888166904,
+          "breach": false
+        },
+        {
+          "date": "2026-01-23",
+          "forecast_var_usd": 7762524.511042118,
+          "actual_loss_usd": 2695045.670402482,
+          "breach": false
+        },
+        {
+          "date": "2026-01-24",
+          "forecast_var_usd": 7262160.6394905085,
+          "actual_loss_usd": -1016477.0618498474,
+          "breach": false
+        },
+        {
+          "date": "2026-01-25",
+          "forecast_var_usd": 7273284.958724216,
+          "actual_loss_usd": 983034.2802113742,
+          "breach": false
+        },
+        {
+          "date": "2026-01-26",
+          "forecast_var_usd": 7508497.466862275,
+          "actual_loss_usd": 1333389.4819535464,
+          "breach": false
+        },
+        {
+          "date": "2026-01-27",
+          "forecast_var_usd": 6937871.001034532,
+          "actual_loss_usd": -881108.8666716814,
+          "breach": false
+        },
+        {
+          "date": "2026-01-28",
+          "forecast_var_usd": 7374253.791638415,
+          "actual_loss_usd": -5011335.840713605,
+          "breach": false
+        },
+        {
+          "date": "2026-01-29",
+          "forecast_var_usd": 7627606.551911309,
+          "actual_loss_usd": 4797059.272220656,
+          "breach": false
+        },
+        {
+          "date": "2026-01-30",
+          "forecast_var_usd": 7610827.140957119,
+          "actual_loss_usd": 8512523.389708936,
+          "breach": true
+        },
+        {
+          "date": "2026-01-31",
+          "forecast_var_usd": 6877163.231491147,
+          "actual_loss_usd": 4944081.654572383,
+          "breach": false
+        },
+        {
+          "date": "2026-02-01",
+          "forecast_var_usd": 6763966.319093588,
+          "actual_loss_usd": 11197304.900627509,
+          "breach": true
+        },
+        {
+          "date": "2026-02-02",
+          "forecast_var_usd": 6183767.474779942,
+          "actual_loss_usd": 4508537.863128334,
+          "breach": false
+        },
+        {
+          "date": "2026-02-03",
+          "forecast_var_usd": 5753850.243211862,
+          "actual_loss_usd": 481473.05733162165,
+          "breach": false
+        },
+        {
+          "date": "2026-02-04",
+          "forecast_var_usd": 5918042.536112379,
+          "actual_loss_usd": 2494735.9980214685,
+          "breach": false
+        },
+        {
+          "date": "2026-02-05",
+          "forecast_var_usd": 5744664.93324122,
+          "actual_loss_usd": 7681419.2070133835,
+          "breach": true
+        },
+        {
+          "date": "2026-02-06",
+          "forecast_var_usd": 5318488.987848299,
+          "actual_loss_usd": 6371710.459541187,
+          "breach": true
+        },
+        {
+          "date": "2026-02-07",
+          "forecast_var_usd": 5003620.677790476,
+          "actual_loss_usd": -6542482.563711867,
+          "breach": false
+        },
+        {
+          "date": "2026-02-08",
+          "forecast_var_usd": 5390096.670170481,
+          "actual_loss_usd": -3224902.6399347037,
+          "breach": false
+        },
+        {
+          "date": "2026-02-09",
+          "forecast_var_usd": 5572271.596082231,
+          "actual_loss_usd": 4967632.281972587,
+          "breach": false
+        },
+        {
+          "date": "2026-02-10",
+          "forecast_var_usd": 5056170.63950143,
+          "actual_loss_usd": 866915.9082288891,
+          "breach": false
+        },
+        {
+          "date": "2026-02-11",
+          "forecast_var_usd": 5318989.559699093,
+          "actual_loss_usd": 2067617.878029421,
+          "breach": false
+        },
+        {
+          "date": "2026-02-12",
+          "forecast_var_usd": 5103379.792168666,
+          "actual_loss_usd": -936143.6168229729,
+          "breach": false
+        },
+        {
+          "date": "2026-02-13",
+          "forecast_var_usd": 5048078.658588991,
+          "actual_loss_usd": 1032397.810226351,
+          "breach": false
+        },
+        {
+          "date": "2026-02-14",
+          "forecast_var_usd": 5054465.806410312,
+          "actual_loss_usd": -5661428.091185063,
+          "breach": false
+        },
+        {
+          "date": "2026-02-15",
+          "forecast_var_usd": 5408412.498479681,
+          "actual_loss_usd": 1267500.171124667,
+          "breach": false
+        },
+        {
+          "date": "2026-02-16",
+          "forecast_var_usd": 5152393.685631552,
+          "actual_loss_usd": 3162342.056536928,
+          "breach": false
+        },
+        {
+          "date": "2026-02-17",
+          "forecast_var_usd": 5013172.009914153,
+          "actual_loss_usd": 1016210.9607297033,
+          "breach": false
+        },
+        {
+          "date": "2026-02-18",
+          "forecast_var_usd": 5071558.32959648,
+          "actual_loss_usd": -570836.429190442,
+          "breach": false
+        },
+        {
+          "date": "2026-02-19",
+          "forecast_var_usd": 4979007.802365333,
+          "actual_loss_usd": 994715.2377352566,
+          "breach": false
+        },
+        {
+          "date": "2026-02-20",
+          "forecast_var_usd": 4812143.250111395,
+          "actual_loss_usd": 428597.6473104954,
+          "breach": false
+        },
+        {
+          "date": "2026-02-21",
+          "forecast_var_usd": 4856717.6856263485,
+          "actual_loss_usd": -1216874.22638461,
+          "breach": false
+        },
+        {
+          "date": "2026-02-22",
+          "forecast_var_usd": 4812134.129244841,
+          "actual_loss_usd": -269230.7104794383,
+          "breach": false
+        },
+        {
+          "date": "2026-02-23",
+          "forecast_var_usd": 4939092.982924951,
+          "actual_loss_usd": 3047812.843111828,
+          "breach": false
+        },
+        {
+          "date": "2026-02-24",
+          "forecast_var_usd": 4579360.504691742,
+          "actual_loss_usd": 3882944.4387632906,
+          "breach": false
+        },
+        {
+          "date": "2026-02-25",
+          "forecast_var_usd": 4654841.58050837,
+          "actual_loss_usd": -5091428.053621352,
+          "breach": false
+        },
+        {
+          "date": "2026-02-26",
+          "forecast_var_usd": 4721758.179453411,
+          "actual_loss_usd": -5950597.968337014,
+          "breach": false
+        },
+        {
+          "date": "2026-02-27",
+          "forecast_var_usd": 5275017.623428611,
+          "actual_loss_usd": 4624562.957937643,
+          "breach": false
+        },
+        {
+          "date": "2026-02-28",
+          "forecast_var_usd": 4958277.551871794,
+          "actual_loss_usd": 4114471.3904246986,
+          "breach": false
+        },
+        {
+          "date": "2026-03-01",
+          "forecast_var_usd": 4680969.777467594,
+          "actual_loss_usd": -4726873.670269057,
+          "breach": false
+        },
+        {
+          "date": "2026-03-02",
+          "forecast_var_usd": 5002246.982403811,
+          "actual_loss_usd": 1971539.3945545554,
+          "breach": false
+        },
+        {
+          "date": "2026-03-03",
+          "forecast_var_usd": 5047421.221178981,
+          "actual_loss_usd": -1344978.7327563167,
+          "breach": false
+        },
+        {
+          "date": "2026-03-04",
+          "forecast_var_usd": 5054249.872275498,
+          "actual_loss_usd": -3010830.0980363637,
+          "breach": false
+        },
+        {
+          "date": "2026-03-05",
+          "forecast_var_usd": 5284965.504574364,
+          "actual_loss_usd": -4472522.469100162,
+          "breach": false
+        },
+        {
+          "date": "2026-03-06",
+          "forecast_var_usd": 5431879.583714123,
+          "actual_loss_usd": 4206426.057105646,
+          "breach": false
+        },
+        {
+          "date": "2026-03-07",
+          "forecast_var_usd": 5348197.565251136,
+          "actual_loss_usd": 2355015.5300534517,
+          "breach": false
+        },
+        {
+          "date": "2026-03-08",
+          "forecast_var_usd": 5048917.891121086,
+          "actual_loss_usd": 1803242.1615369618,
+          "breach": false
+        },
+        {
+          "date": "2026-03-09",
+          "forecast_var_usd": 4991361.802153584,
+          "actual_loss_usd": -2313119.2396602035,
+          "breach": false
+        },
+        {
+          "date": "2026-03-10",
+          "forecast_var_usd": 5279041.244728831,
+          "actual_loss_usd": -2514809.966877252,
+          "breach": false
+        },
+        {
+          "date": "2026-03-11",
+          "forecast_var_usd": 5233814.7723771855,
+          "actual_loss_usd": 1388705.7265628427,
+          "breach": false
+        },
+        {
+          "date": "2026-03-12",
+          "forecast_var_usd": 5209554.116500531,
+          "actual_loss_usd": -1629478.908457294,
+          "breach": false
+        },
+        {
+          "date": "2026-03-13",
+          "forecast_var_usd": 5374610.789190924,
+          "actual_loss_usd": -3025943.298890516,
+          "breach": false
+        },
+        {
+          "date": "2026-03-14",
+          "forecast_var_usd": 5640105.4278254965,
+          "actual_loss_usd": 2338621.359755501,
+          "breach": false
+        },
+        {
+          "date": "2026-03-15",
+          "forecast_var_usd": 5372939.039042029,
+          "actual_loss_usd": -1843769.236031562,
+          "breach": false
+        },
+        {
+          "date": "2026-03-16",
+          "forecast_var_usd": 5409982.618138296,
+          "actual_loss_usd": -7959311.692455307,
+          "breach": false
+        },
+        {
+          "date": "2026-03-17",
+          "forecast_var_usd": 6252127.946333625,
+          "actual_loss_usd": -1413480.1058564335,
+          "breach": false
+        },
+        {
+          "date": "2026-03-18",
+          "forecast_var_usd": 6048516.35512217,
+          "actual_loss_usd": 3074975.376221895,
+          "breach": false
+        },
+        {
+          "date": "2026-03-19",
+          "forecast_var_usd": 6072605.744121488,
+          "actual_loss_usd": 4067061.0478306264,
+          "breach": false
+        },
+        {
+          "date": "2026-03-20",
+          "forecast_var_usd": 5680548.60327808,
+          "actual_loss_usd": 968825.5382410735,
+          "breach": false
+        },
+        {
+          "date": "2026-03-21",
+          "forecast_var_usd": 5547019.851293839,
+          "actual_loss_usd": -896895.2039794028,
+          "breach": false
+        },
+        {
+          "date": "2026-03-22",
+          "forecast_var_usd": 5536139.764463762,
+          "actual_loss_usd": 3533204.8367565274,
+          "breach": false
+        },
+        {
+          "date": "2026-03-23",
+          "forecast_var_usd": 5483853.354864336,
+          "actual_loss_usd": -1806172.4273783267,
+          "breach": false
+        },
+        {
+          "date": "2026-03-24",
+          "forecast_var_usd": 5416181.007169029,
+          "actual_loss_usd": -1681559.2324070632,
+          "breach": false
+        },
+        {
+          "date": "2026-03-25",
+          "forecast_var_usd": 5534520.308867286,
+          "actual_loss_usd": -456973.03701871634,
+          "breach": false
+        },
+        {
+          "date": "2026-03-26",
+          "forecast_var_usd": 5742475.237509405,
+          "actual_loss_usd": 4494770.861830771,
+          "breach": false
+        },
+        {
+          "date": "2026-03-27",
+          "forecast_var_usd": 5467344.3008555295,
+          "actual_loss_usd": 3764319.536836356,
+          "breach": false
+        },
+        {
+          "date": "2026-03-28",
+          "forecast_var_usd": 5153728.549618217,
+          "actual_loss_usd": -692284.4551094621,
+          "breach": false
+        },
+        {
+          "date": "2026-03-29",
+          "forecast_var_usd": 5288177.321181594,
+          "actual_loss_usd": -2145.0287729650736,
+          "breach": false
+        },
+        {
+          "date": "2026-03-30",
+          "forecast_var_usd": 5241588.841863254,
+          "actual_loss_usd": -3347593.2778006494,
+          "breach": false
+        },
+        {
+          "date": "2026-03-31",
+          "forecast_var_usd": 5398522.036996761,
+          "actual_loss_usd": 1385806.9725494683,
+          "breach": false
+        },
+        {
+          "date": "2026-04-01",
+          "forecast_var_usd": 5265271.796259384,
+          "actual_loss_usd": -4023366.2247220725,
+          "breach": false
+        },
+        {
+          "date": "2026-04-02",
+          "forecast_var_usd": 5812339.269146859,
+          "actual_loss_usd": 4666975.604795337,
+          "breach": false
+        },
+        {
+          "date": "2026-04-03",
+          "forecast_var_usd": 5368877.890550049,
+          "actual_loss_usd": -1512484.3728876263,
+          "breach": false
+        },
+        {
+          "date": "2026-04-04",
+          "forecast_var_usd": 5568504.293550386,
+          "actual_loss_usd": 486656.3419171423,
+          "breach": false
+        },
+        {
+          "date": "2026-04-05",
+          "forecast_var_usd": 5494557.196270662,
+          "actual_loss_usd": 1100294.8367566317,
+          "breach": false
+        },
+        {
+          "date": "2026-04-06",
+          "forecast_var_usd": 5190597.104902004,
+          "actual_loss_usd": -5558719.669960365,
+          "breach": false
+        },
+        {
+          "date": "2026-04-07",
+          "forecast_var_usd": 5580054.850961849,
+          "actual_loss_usd": 3307745.2793388367,
+          "breach": false
+        },
+        {
+          "date": "2026-04-08",
+          "forecast_var_usd": 5563663.369713027,
+          "actual_loss_usd": -8038054.754514694,
+          "breach": false
+        },
+        {
+          "date": "2026-04-09",
+          "forecast_var_usd": 5981717.364403751,
+          "actual_loss_usd": 3336624.68390508,
+          "breach": false
+        },
+        {
+          "date": "2026-04-10",
+          "forecast_var_usd": 5700720.455959915,
+          "actual_loss_usd": -1743917.771627158,
+          "breach": false
+        },
+        {
+          "date": "2026-04-11",
+          "forecast_var_usd": 5762881.703542842,
+          "actual_loss_usd": -1122610.5648747087,
+          "breach": false
+        },
+        {
+          "date": "2026-04-12",
+          "forecast_var_usd": 5848958.684494102,
+          "actual_loss_usd": 1728689.8346861452,
+          "breach": false
+        },
+        {
+          "date": "2026-04-13",
+          "forecast_var_usd": 5513499.259414812,
+          "actual_loss_usd": 969135.3318542987,
+          "breach": false
+        },
+        {
+          "date": "2026-04-14",
+          "forecast_var_usd": 5371195.4590181615,
+          "actual_loss_usd": -8674384.05511874,
+          "breach": false
+        },
+        {
+          "date": "2026-04-15",
+          "forecast_var_usd": 6397447.101652031,
+          "actual_loss_usd": 1736704.9637526274,
+          "breach": false
+        },
+        {
+          "date": "2026-04-16",
+          "forecast_var_usd": 5949356.253828503,
+          "actual_loss_usd": 51018.79179407656,
+          "breach": false
+        },
+        {
+          "date": "2026-04-17",
+          "forecast_var_usd": 5830914.782784116,
+          "actual_loss_usd": -1204025.0102352947,
+          "breach": false
+        },
+        {
+          "date": "2026-04-18",
+          "forecast_var_usd": 6227680.17197528,
+          "actual_loss_usd": 234191.4155139923,
+          "breach": false
+        },
+        {
+          "date": "2026-04-19",
+          "forecast_var_usd": 6190366.540399395,
+          "actual_loss_usd": 1184358.494991541,
+          "breach": false
+        },
+        {
+          "date": "2026-04-20",
+          "forecast_var_usd": 5983307.717781483,
+          "actual_loss_usd": 547352.8426875174,
+          "breach": false
+        },
+        {
+          "date": "2026-04-21",
+          "forecast_var_usd": 5934224.947584306,
+          "actual_loss_usd": 219045.79284220934,
+          "breach": false
+        },
+        {
+          "date": "2026-04-22",
+          "forecast_var_usd": 5851682.38942493,
+          "actual_loss_usd": -3379215.1804560125,
+          "breach": false
+        },
+        {
+          "date": "2026-04-23",
+          "forecast_var_usd": 6306694.68962629,
+          "actual_loss_usd": 3046692.317366034,
+          "breach": false
+        },
+        {
+          "date": "2026-04-24",
+          "forecast_var_usd": 6028229.183485568,
+          "actual_loss_usd": 50341.06117019057,
+          "breach": false
+        },
+        {
+          "date": "2026-04-25",
+          "forecast_var_usd": 6133667.895953396,
+          "actual_loss_usd": 563543.5088522434,
+          "breach": false
+        },
+        {
+          "date": "2026-04-26",
+          "forecast_var_usd": 6152032.585011656,
+          "actual_loss_usd": -672583.7887969464,
+          "breach": false
+        },
+        {
+          "date": "2026-04-27",
+          "forecast_var_usd": 5928653.939629467,
+          "actual_loss_usd": 635256.8435551375,
+          "breach": false
+        },
+        {
+          "date": "2026-04-28",
+          "forecast_var_usd": 6051191.183688738,
+          "actual_loss_usd": 2018723.7892802656,
+          "breach": false
+        },
+        {
+          "date": "2026-04-29",
+          "forecast_var_usd": 5839416.141822343,
+          "actual_loss_usd": -2196979.3642232716,
+          "breach": false
+        },
+        {
+          "date": "2026-04-30",
+          "forecast_var_usd": 5771544.073514829,
+          "actual_loss_usd": 2863971.9920710325,
+          "breach": false
+        },
+        {
+          "date": "2026-05-01",
+          "forecast_var_usd": 5934065.288173688,
+          "actual_loss_usd": -2331844.3053760827,
+          "breach": false
+        },
+        {
+          "date": "2026-05-02",
+          "forecast_var_usd": 5771494.543264042,
+          "actual_loss_usd": 467259.33101916313,
+          "breach": false
+        },
+        {
+          "date": "2026-05-03",
+          "forecast_var_usd": 5934753.928524627,
+          "actual_loss_usd": -1398260.355783224,
+          "breach": false
+        },
+        {
+          "date": "2026-05-04",
+          "forecast_var_usd": 6104579.046613185,
+          "actual_loss_usd": -261849.66209197044,
+          "breach": false
+        },
+        {
+          "date": "2026-05-05",
+          "forecast_var_usd": 5692047.878549553,
+          "actual_loss_usd": -2003314.3200958967,
+          "breach": false
+        },
+        {
+          "date": "2026-05-06",
+          "forecast_var_usd": 6053238.004334591,
+          "actual_loss_usd": -768048.6315629035,
+          "breach": false
+        },
+        {
+          "date": "2026-05-07",
+          "forecast_var_usd": 5696462.431639643,
+          "actual_loss_usd": 3394907.0162472427,
+          "breach": false
+        },
+        {
+          "date": "2026-05-08",
+          "forecast_var_usd": 5843370.8245754475,
+          "actual_loss_usd": 1720582.8380152434,
+          "breach": false
+        },
+        {
+          "date": "2026-05-09",
+          "forecast_var_usd": 5638695.115083238,
+          "actual_loss_usd": -1008865.8706377894,
+          "breach": false
+        },
+        {
+          "date": "2026-05-10",
+          "forecast_var_usd": 5638798.74015814,
+          "actual_loss_usd": -348478.9428112209,
+          "breach": false
+        },
+        {
+          "date": "2026-05-11",
+          "forecast_var_usd": 5719971.124360207,
+          "actual_loss_usd": -735954.2565294653,
+          "breach": false
+        },
+        {
+          "date": "2026-05-12",
+          "forecast_var_usd": 5896146.978236143,
+          "actual_loss_usd": 2634556.7839193344,
+          "breach": false
+        },
+        {
+          "date": "2026-05-13",
+          "forecast_var_usd": 5617294.0360498335,
+          "actual_loss_usd": -172143.52876971662,
+          "breach": false
+        },
+        {
+          "date": "2026-05-14",
+          "forecast_var_usd": 5464595.845690987,
+          "actual_loss_usd": 1286933.215962112,
+          "breach": false
+        },
+        {
+          "date": "2026-05-15",
+          "forecast_var_usd": 5250928.454416109,
+          "actual_loss_usd": 313188.57444527745,
+          "breach": false
+        },
+        {
+          "date": "2026-05-16",
+          "forecast_var_usd": 5455169.2817894835,
+          "actual_loss_usd": 3549468.950659141,
+          "breach": false
+        },
+        {
+          "date": "2026-05-17",
+          "forecast_var_usd": 5232005.70309341,
+          "actual_loss_usd": -918584.8367320448,
+          "breach": false
+        },
+        {
+          "date": "2026-05-18",
+          "forecast_var_usd": 5333780.245148622,
+          "actual_loss_usd": 2366069.384941086,
+          "breach": false
+        },
+        {
+          "date": "2026-05-19",
+          "forecast_var_usd": 4984385.197065326,
+          "actual_loss_usd": 1238619.893125236,
+          "breach": false
+        },
+        {
+          "date": "2026-05-20",
+          "forecast_var_usd": 5143069.789034788,
+          "actual_loss_usd": -601269.1453724056,
+          "breach": false
+        },
+        {
+          "date": "2026-05-21",
+          "forecast_var_usd": 4850655.005588818,
+          "actual_loss_usd": 806071.8588080555,
+          "breach": false
+        },
+        {
+          "date": "2026-05-22",
+          "forecast_var_usd": 5031834.915268814,
+          "actual_loss_usd": -766269.8079195321,
+          "breach": false
+        },
+        {
+          "date": "2026-05-23",
+          "forecast_var_usd": 5076944.917054519,
+          "actual_loss_usd": 4495688.017377719,
+          "breach": false
+        },
+        {
+          "date": "2026-05-24",
+          "forecast_var_usd": 4747732.276638999,
+          "actual_loss_usd": -4336320.186241016,
+          "breach": false
+        },
+        {
+          "date": "2026-05-25",
+          "forecast_var_usd": 4770615.699443126,
+          "actual_loss_usd": 394341.64020451903,
+          "breach": false
+        },
+        {
+          "date": "2026-05-26",
+          "forecast_var_usd": 4940695.478516124,
+          "actual_loss_usd": 286250.7599898279,
+          "breach": false
+        },
+        {
+          "date": "2026-05-27",
+          "forecast_var_usd": 4865781.335057156,
+          "actual_loss_usd": 945692.7793616652,
+          "breach": false
+        },
+        {
+          "date": "2026-05-28",
+          "forecast_var_usd": 4660945.987475478,
+          "actual_loss_usd": 4607407.9228487015,
+          "breach": false
+        },
+        {
+          "date": "2026-05-29",
+          "forecast_var_usd": 4720401.4777527675,
+          "actual_loss_usd": -960394.7018716335,
+          "breach": false
+        },
+        {
+          "date": "2026-05-30",
+          "forecast_var_usd": 4531377.361890065,
+          "actual_loss_usd": -449647.633170411,
+          "breach": false
+        },
+        {
+          "date": "2026-05-31",
+          "forecast_var_usd": 4727029.661429289,
+          "actual_loss_usd": -194600.32588638365,
+          "breach": false
+        },
+        {
+          "date": "2026-06-01",
+          "forecast_var_usd": 4672771.483783162,
+          "actual_loss_usd": 1652614.3664372414,
+          "breach": false
+        },
+        {
+          "date": "2026-06-02",
+          "forecast_var_usd": 4404171.290070739,
+          "actual_loss_usd": -87792.2660369128,
+          "breach": false
+        },
+        {
+          "date": "2026-06-03",
+          "forecast_var_usd": 4553218.024556388,
+          "actual_loss_usd": 4584693.467118293,
+          "breach": true
+        },
+        {
+          "date": "2026-06-04",
+          "forecast_var_usd": 4202663.066663456,
+          "actual_loss_usd": 4334769.261176616,
+          "breach": true
+        },
+        {
+          "date": "2026-06-05",
+          "forecast_var_usd": 4041499.943583017,
+          "actual_loss_usd": 6181549.330257982,
+          "breach": true
+        },
+        {
+          "date": "2026-06-06",
+          "forecast_var_usd": 3669243.6185512575,
+          "actual_loss_usd": 4063772.38059555,
+          "breach": true
+        },
+        {
+          "date": "2026-06-07",
+          "forecast_var_usd": 3490062.1143184295,
+          "actual_loss_usd": -2504759.3047536463,
+          "breach": false
+        },
+        {
+          "date": "2026-06-08",
+          "forecast_var_usd": 3786108.9014194817,
+          "actual_loss_usd": -2943796.64406915,
+          "breach": false
+        },
+        {
+          "date": "2026-06-09",
+          "forecast_var_usd": 3779594.775381404,
+          "actual_loss_usd": -87051.73449917883,
+          "breach": false
+        },
+        {
+          "date": "2026-06-10",
+          "forecast_var_usd": 3823424.6944859168,
+          "actual_loss_usd": 1937850.2716439143,
+          "breach": false
+        },
+        {
+          "date": "2026-06-11",
+          "forecast_var_usd": 3733188.4478118652,
+          "actual_loss_usd": -478469.262524426,
+          "breach": false
+        },
+        {
+          "date": "2026-06-12",
+          "forecast_var_usd": 3751501.10036377,
+          "actual_loss_usd": -844784.5029179007,
+          "breach": false
+        },
+        {
+          "date": "2026-06-13",
+          "forecast_var_usd": 3705690.595015981,
+          "actual_loss_usd": -321860.96055722237,
+          "breach": false
+        },
+        {
+          "date": "2026-06-14",
+          "forecast_var_usd": 3777268.706314294,
+          "actual_loss_usd": 185083.24382579327,
+          "breach": false
+        },
+        {
+          "date": "2026-06-15",
+          "forecast_var_usd": 3949713.6867257887,
+          "actual_loss_usd": -4082112.5207743496,
+          "breach": false
+        },
+        {
+          "date": "2026-06-16",
+          "forecast_var_usd": 3912484.7077249973,
+          "actual_loss_usd": -3026134.3079513162,
+          "breach": false
+        },
+        {
+          "date": "2026-06-17",
+          "forecast_var_usd": 4294096.215638233,
+          "actual_loss_usd": 3785379.0977312922,
+          "breach": false
+        },
+        {
+          "date": "2026-06-18",
+          "forecast_var_usd": 3964262.2786189923,
+          "actual_loss_usd": -347056.6677901596,
+          "breach": false
+        },
+        {
+          "date": "2026-06-19",
+          "forecast_var_usd": 4082251.253362377,
+          "actual_loss_usd": 2852309.4667464197,
+          "breach": false
+        },
+        {
+          "date": "2026-06-20",
+          "forecast_var_usd": 4011569.115894067,
+          "actual_loss_usd": -1878117.5921640173,
+          "breach": false
+        },
+        {
+          "date": "2026-06-21",
+          "forecast_var_usd": 3886624.0353679354,
+          "actual_loss_usd": 539233.8506049886,
+          "breach": false
+        },
+        {
+          "date": "2026-06-22",
+          "forecast_var_usd": 3946560.9279993623,
+          "actual_loss_usd": -1968921.0381300896,
+          "breach": false
+        },
+        {
+          "date": "2026-06-23",
+          "forecast_var_usd": 4193618.8524713023,
+          "actual_loss_usd": 4760380.252606094,
+          "breach": true
+        },
+        {
+          "date": "2026-06-24",
+          "forecast_var_usd": 3706319.46680325,
+          "actual_loss_usd": -892992.4524806142,
+          "breach": false
+        },
+        {
+          "date": "2026-06-25",
+          "forecast_var_usd": 3856147.843667679,
+          "actual_loss_usd": 1624603.8156635165,
+          "breach": false
+        },
+        {
+          "date": "2026-06-26",
+          "forecast_var_usd": 3820056.046347136,
+          "actual_loss_usd": 4143259.868858598,
+          "breach": true
+        },
+        {
+          "date": "2026-06-27",
+          "forecast_var_usd": 3604228.995840812,
+          "actual_loss_usd": -1495381.1743261963,
+          "breach": false
+        },
+        {
+          "date": "2026-06-28",
+          "forecast_var_usd": 3706483.419616959,
+          "actual_loss_usd": 153116.6037343517,
+          "breach": false
+        },
+        {
+          "date": "2026-06-29",
+          "forecast_var_usd": 3782491.543856174,
+          "actual_loss_usd": -416605.6677402109,
+          "breach": false
+        },
+        {
+          "date": "2026-06-30",
+          "forecast_var_usd": 3708823.8104600306,
+          "actual_loss_usd": 1136651.8402155042,
+          "breach": false
+        },
+        {
+          "date": "2026-07-01",
+          "forecast_var_usd": 3768703.9287157175,
+          "actual_loss_usd": -479501.69481514394,
+          "breach": false
+        },
+        {
+          "date": "2026-07-02",
+          "forecast_var_usd": 3703828.458044552,
+          "actual_loss_usd": -3675373.328437194,
+          "breach": false
+        },
+        {
+          "date": "2026-07-03",
+          "forecast_var_usd": 3759780.8494054168,
+          "actual_loss_usd": -3794675.6428283453,
+          "breach": false
+        },
+        {
+          "date": "2026-07-04",
+          "forecast_var_usd": 4055708.796774023,
+          "actual_loss_usd": -1298968.439897135,
+          "breach": false
+        },
+        {
+          "date": "2026-07-05",
+          "forecast_var_usd": 4220278.235323341,
+          "actual_loss_usd": 97144.37275986373,
+          "breach": false
+        },
+        {
+          "date": "2026-07-06",
+          "forecast_var_usd": 4371575.102293209,
+          "actual_loss_usd": 714923.1152620092,
+          "breach": false
+        },
+        {
+          "date": "2026-07-07",
+          "forecast_var_usd": 4132310.885487889,
+          "actual_loss_usd": -2184323.357125707,
+          "breach": false
+        },
+        {
+          "date": "2026-07-08",
+          "forecast_var_usd": 4279630.825130675,
+          "actual_loss_usd": 1986289.3056937456,
+          "breach": false
+        },
+        {
+          "date": "2026-07-09",
+          "forecast_var_usd": 4089046.6913678767,
+          "actual_loss_usd": 231776.04540225118,
+          "breach": false
+        },
+        {
+          "date": "2026-07-10",
+          "forecast_var_usd": 4262934.86448628,
+          "actual_loss_usd": -2631703.265834488,
+          "breach": false
+        },
+        {
+          "date": "2026-07-11",
+          "forecast_var_usd": 4325008.366339628,
+          "actual_loss_usd": 164787.28727389872,
+          "breach": false
+        },
+        {
+          "date": "2026-07-12",
+          "forecast_var_usd": 4350888.305501525,
+          "actual_loss_usd": -313287.6761815995,
+          "breach": false
+        },
+        {
+          "date": "2026-07-13",
+          "forecast_var_usd": 4428254.491321021,
+          "actual_loss_usd": 1483245.3972917497,
+          "breach": false
+        },
+        {
+          "date": "2026-07-14",
+          "forecast_var_usd": 4220611.296590306,
+          "actual_loss_usd": -2604700.854358077,
+          "breach": false
+        },
+        {
+          "date": "2026-07-15",
+          "forecast_var_usd": 4373004.308223456,
+          "actual_loss_usd": -2985338.6913606375,
+          "breach": false
+        },
+        {
+          "date": "2026-07-16",
+          "forecast_var_usd": 4476131.818518764,
+          "actual_loss_usd": 322955.05751495063,
+          "breach": false
+        },
+        {
+          "date": "2026-07-17",
+          "forecast_var_usd": 4630130.406345549,
+          "actual_loss_usd": 2374616.049087316,
+          "breach": false
+        },
+        {
+          "date": "2026-07-18",
+          "forecast_var_usd": 4496072.410486472,
+          "actual_loss_usd": -468735.07136052847,
+          "breach": false
+        },
+        {
+          "date": "2026-07-19",
+          "forecast_var_usd": 4488022.415294311,
+          "actual_loss_usd": -1417271.0332969576,
+          "breach": false
+        },
+        {
+          "date": "2026-07-20",
+          "forecast_var_usd": 4579079.76212252,
+          "actual_loss_usd": 6787.3262971788645,
+          "breach": false
+        }
+      ],
+      "breach_observations": [
+        {
+          "date": "2026-01-21",
+          "forecast_var_usd": 7801386.578166383,
+          "actual_loss_usd": 9504330.696633428
+        },
+        {
+          "date": "2026-01-30",
+          "forecast_var_usd": 7610827.140957119,
+          "actual_loss_usd": 8512523.389708936
+        },
+        {
+          "date": "2026-02-01",
+          "forecast_var_usd": 6763966.319093588,
+          "actual_loss_usd": 11197304.900627509
+        },
+        {
+          "date": "2026-02-05",
+          "forecast_var_usd": 5744664.93324122,
+          "actual_loss_usd": 7681419.2070133835
+        },
+        {
+          "date": "2026-02-06",
+          "forecast_var_usd": 5318488.987848299,
+          "actual_loss_usd": 6371710.459541187
+        },
+        {
+          "date": "2026-06-03",
+          "forecast_var_usd": 4553218.024556388,
+          "actual_loss_usd": 4584693.467118293
+        },
+        {
+          "date": "2026-06-04",
+          "forecast_var_usd": 4202663.066663456,
+          "actual_loss_usd": 4334769.261176616
+        },
+        {
+          "date": "2026-06-05",
+          "forecast_var_usd": 4041499.943583017,
+          "actual_loss_usd": 6181549.330257982
+        },
+        {
+          "date": "2026-06-06",
+          "forecast_var_usd": 3669243.6185512575,
+          "actual_loss_usd": 4063772.38059555
+        },
+        {
+          "date": "2026-06-23",
+          "forecast_var_usd": 4193618.8524713023,
+          "actual_loss_usd": 4760380.252606094
+        },
+        {
+          "date": "2026-06-26",
+          "forecast_var_usd": 3820056.046347136,
+          "actual_loss_usd": 4143259.868858598
+        }
+      ],
+      "checks": {
+        "kupiec_unconditional_coverage_p_value_at_least_0_05": true,
+        "christoffersen_independence_p_value_at_least_0_05": false
+      },
+      "passed": false
+    },
+    "stablecoin_and_heavy_tail_stress": {
+      "method": "permanent stablecoin spot jump plus calibrated diffusion; multivariate Student-t innovations covariance-matched to Gaussian baseline",
+      "horizon_days": 30,
+      "n_paths_per_scenario": 20000,
+      "seed_per_scenario": 20260725,
+      "tail_confidence_level": 0.99,
+      "stablecoin_exposures": [
+        {
+          "index": 2,
+          "symbol": "USDT",
+          "roles": [
+            "debt"
+          ]
+        }
+      ],
+      "gaussian_baseline": {
+        "liquidation_probability": 0.6724,
+        "liquidation_probability_ci_lower": 0.6658628588104487,
+        "liquidation_probability_ci_upper": 0.6788709271574065,
+        "value_at_risk_usd": 25598322.853076626,
+        "expected_shortfall_usd": 28206922.09119493,
+        "liquidation_probability_ci_width": 0.01300806834695778
+      },
+      "student_t_stress": {
+        "degrees_of_freedom": 5.0,
+        "liquidation_probability": 0.65505,
+        "liquidation_probability_ci_lower": 0.64843286894381,
+        "liquidation_probability_ci_upper": 0.6616075806751919,
+        "value_at_risk_usd": 25467131.953736935,
+        "expected_shortfall_usd": 28486680.177278683,
+        "liquidation_probability_ci_width": 0.01317471173138185
+      },
+      "student_t_amplification": {
+        "liquidation_probability_difference": -0.017349999999999977,
+        "value_at_risk_ratio": 0.994875019738884,
+        "expected_shortfall_ratio": 1.0099180649763655
+      },
+      "stablecoin_depeg_scenarios": [
+        {
+          "stablecoin_price_shock_pct": -10.0,
+          "initial_health_factor": 1.113127417382536,
+          "liquidation_probability": 0.40295,
+          "liquidation_probability_ci_lower": 0.3961715325034702,
+          "liquidation_probability_ci_upper": 0.4097657416950196,
+          "value_at_risk_usd": 25600735.176482867,
+          "expected_shortfall_usd": 28208948.408674058,
+          "liquidation_probability_ci_width": 0.013594209191549411
+        },
+        {
+          "stablecoin_price_shock_pct": 10.0,
+          "initial_health_factor": 0.9936484456491939,
+          "liquidation_probability": 1.0,
+          "liquidation_probability_ci_lower": 1.0,
+          "liquidation_probability_ci_upper": 1.0,
+          "value_at_risk_usd": 25595910.529670376,
+          "expected_shortfall_usd": 28204895.773715805,
+          "liquidation_probability_ci_width": 0.0
+        }
+      ]
+    }
+  },
+  "summary": {
+    "time_step_convergence_passed": true,
+    "path_count_convergence_passed": true,
+    "calibration_window_convergence_passed": true,
+    "rolling_var_backtest_passed": false,
+    "all_statistical_acceptance_checks_passed": false
+  },
+  "limitations": [
+    "The VaR backtest applies the current snapshot's fixed token quantities to historical prices; it is not a reconstruction of the user's historical balances or health factor.",
+    "The backtest validates one-day terminal mark-to-market VaR coverage, not historical Aave liquidation events or post-liquidation execution.",
+    "The HF=1.05 portfolio is a disclosed counterfactual sensitivity case and must not be presented as an observed borrower account.",
+    "Student-t stress matches the calibrated innovation covariance but is not a fitted claim that returns follow a t distribution with five degrees of freedom.",
+    "Stablecoin shocks are role-dependent: a downward shock to debt reduces liabilities, while an upward price break is adverse for stablecoin debt."
+  ]
+}

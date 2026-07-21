@@ -1,0 +1,98 @@
+{
+  "account": {
+    "available_borrows_base_raw": 50000000000,
+    "base_currency_unit": 100000000,
+    "current_liquidation_threshold_bps": 8000,
+    "health_factor_raw": 1600000000000000000,
+    "ltv_bps": 7500,
+    "total_collateral_base_raw": 200000000000,
+    "total_debt_base_raw": 100000000000
+  },
+  "base_currency_address": "0x0000000000000000000000000000000000000000",
+  "base_currency_unit": 100000000,
+  "block": {
+    "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "number": 19000000,
+    "timestamp": 1700000000
+  },
+  "chain_id": 1,
+  "contracts": {
+    "addresses_provider": "0x2f39D218133AFaB8F2B819B1066c7E434Ad94E9e",
+    "oracle": "0x2222222222222222222222222222222222222222",
+    "pool": "0x1111111111111111111111111111111111111111",
+    "pool_data_provider": "0x3333333333333333333333333333333333333333",
+    "pool_implementation": "0x4444444444444444444444444444444444444444",
+    "pool_revision": 11
+  },
+  "flashloan_premium_total_bps": 5,
+  "emode_data_complete": true,
+  "market": "Aave V3 Ethereum Core",
+  "positions": [
+    {
+      "asset_address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "collateral_balance_raw": 1000000000000000000,
+      "decimals": 18,
+      "effective_liquidation_bonus_bps": null,
+      "effective_liquidation_threshold_bps": null,
+      "effective_ltv_bps": null,
+      "oracle_base_currency_unit": 100000000,
+      "oracle_price_raw": 200000000000,
+      "oracle_round_id": 100,
+      "oracle_updated_at": 1699999900,
+      "price_source_address": "0x5555555555555555555555555555555555555555",
+      "price_source_kind": "chainlink",
+      "reserve": {
+        "borrowing_enabled": true,
+        "is_active": true,
+        "is_frozen": false,
+        "liquidation_bonus_bps": 10500,
+        "liquidation_protocol_fee_bps": 1000,
+        "liquidation_threshold_bps": 8000,
+        "ltv_bps": 7500,
+        "reserve_factor_bps": 1500,
+        "stable_borrow_rate_enabled": false,
+        "usage_as_collateral_enabled": true
+      },
+      "reserve_id": 0,
+      "stable_debt_balance_raw": 0,
+      "symbol": "WETH",
+      "user_uses_as_collateral": true,
+      "variable_debt_balance_raw": 0
+    },
+    {
+      "asset_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "collateral_balance_raw": 0,
+      "decimals": 6,
+      "effective_liquidation_bonus_bps": null,
+      "effective_liquidation_threshold_bps": null,
+      "effective_ltv_bps": null,
+      "oracle_base_currency_unit": 100000000,
+      "oracle_price_raw": 100000000,
+      "oracle_round_id": 200,
+      "oracle_updated_at": 1699999950,
+      "price_source_address": "0x6666666666666666666666666666666666666666",
+      "price_source_kind": "chainlink",
+      "reserve": {
+        "borrowing_enabled": true,
+        "is_active": true,
+        "is_frozen": false,
+        "liquidation_bonus_bps": 10500,
+        "liquidation_protocol_fee_bps": 1000,
+        "liquidation_threshold_bps": 8000,
+        "ltv_bps": 7500,
+        "reserve_factor_bps": 1000,
+        "stable_borrow_rate_enabled": false,
+        "usage_as_collateral_enabled": true
+      },
+      "reserve_id": 1,
+      "stable_debt_balance_raw": 0,
+      "symbol": "USDC",
+      "user_uses_as_collateral": false,
+      "variable_debt_balance_raw": 1000000000
+    }
+  ],
+  "schema_version": 1,
+  "user_address": "0x7777777777777777777777777777777777777777",
+  "user_emode_category": 0,
+  "warnings": []
+}

@@ -1,0 +1,90 @@
+name: Evidence Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evidence-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-release-evidence:
+    name: Verify release evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install evidence runtime
+        run: |
+          python -m pip install --requirement requirements-lock.txt
+          python -m pip install --no-deps --editable .
+
+      - name: Check dependency consistency
+        run: python -m pip check
+
+      - name: Reject missing or stale release evidence
+        if: github.event_name != 'release'
+        run: python scripts/verify_evidence.py
+
+      - name: Verify published release tag and evidence
+        if: github.event_name == 'release'
+        run: python scripts/verify_evidence.py --require-tag
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Check formatting
+        run: ruff format --check .
+
+      - name: Type-check model source
+        run: mypy src/aave_risk_monitor
+
+      - name: Run offline validation suite
+        run: pytest --cov=aave_risk_monitor --cov-report=term-missing
+
+      - name: Upload verified evidence bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            reports/evidence_manifest.json
+            reports/empirical_validation.json
+            reports/fixed_snapshot_analysis.json
+            reports/liquidation_replay.json
+            reports/liquidation_replay.md
+            reports/mainnet_fork_liquidation.json
+            reports/research_report.md
+            reports/validation_report.md
+            snapshots/*.json
+            data/evidence/*.json
+            data/history/*.csv
+            docs/assets/aave-risk-monitor.png
+            README.md
+            pyproject.toml
+            requirements-lock.txt
+            scripts/*.py
+            src/aave_risk_monitor/*.py
+            src/aave_risk_monitor/**/*.py
+            tests/*.py
+            tests/fixtures/*
+            .github/workflows/ci.yml
+            .github/workflows/evidence-gate.yml
