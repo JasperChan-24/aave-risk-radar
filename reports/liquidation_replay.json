@@ -1,0 +1,112 @@
+{
+  "accounts": {
+    "observed_high_health_control": {
+      "block_number": 25573974,
+      "collateral_value_usd": "90753448.23919924040125639808",
+      "debt_value_usd": "17626886.3373094836455591",
+      "health_factor": "4.273322048891862594",
+      "health_factor_wad": 4273322048891862594,
+      "is_observed_account": true,
+      "reconciled": true,
+      "snapshot_path": "snapshots/1-ed0c6079229e2d407672a117c22b62064f4a4312-block-25573974.json",
+      "snapshot_sha256": "3feb4f279eddef5383cbaae072d3fdd0c59bcbb801e7f593f92111af1d4690f5",
+      "user": "0xEd0C6079229E2d407672a117c22b62064f4a4312"
+    },
+    "observed_near_liquidation": {
+      "block_number": 25572181,
+      "health_factor": "0.999565096476407496",
+      "health_factor_wad": 999565096476407496,
+      "is_observed_account": true,
+      "reconciled": true,
+      "snapshot_path": "snapshots/1-eb75251694d4d1a71af99b1f96c819dc5e9ed3ea-block-25572181.json",
+      "snapshot_sha256": "40dcdd3fadc945a194ad371541650c4d5f404652ed1c29e7254497b4c10555de",
+      "user": "0xeB75251694d4D1a71aF99B1F96C819Dc5E9eD3Ea"
+    }
+  },
+  "evidence": {
+    "block_hash": "0x147d30c3a802fefdc86bc858b15f299f27258cc2e9628a9c39380748946d94d0",
+    "block_number": 25572182,
+    "path": "data/evidence/aave_v3_ethereum_liquidation_0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f.json",
+    "sha256": "58c06b64ffbd28628bb7ff808cae4bc389b59c8217663e51293813e76129f149",
+    "transaction_hash": "0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f"
+  },
+  "historical_replay": {
+    "comparison": {
+      "checks": {
+        "actual_debt_matches_event": true,
+        "liquidator_collateral_matches_event": true,
+        "pool_revision_11": true,
+        "pre_state_health_factor_below_one": true
+      },
+      "collateral_delta_raw": 0,
+      "debt_delta_raw": 0,
+      "event_debt_to_cover_raw": 15001159,
+      "event_liquidated_collateral_amount_raw": 8495915601721874,
+      "model_actual_debt_to_liquidate_raw": 15001159,
+      "model_collateral_to_liquidator_raw": 8495915601721874,
+      "model_gross_collateral_seized_raw": 8536565915605711,
+      "model_protocol_fee_collateral_raw": 40650313883837,
+      "passed": true
+    },
+    "method": "revision-11 integer liquidation arithmetic conditioned on the event-emitted debt amount",
+    "model_inputs": {
+      "borrower_collateral_balance_raw": 9790996369418213,
+      "borrower_debt_balance_raw": 15001159,
+      "borrower_emode_category": 0,
+      "collateral_decimals": 18,
+      "collateral_enabled_in_emode": false,
+      "collateral_price_base_raw": 184378618677,
+      "debt_decimals": 6,
+      "debt_price_base_raw": 99926262,
+      "debt_to_cover_raw": 15001159,
+      "emode_liquidation_bonus_bps": null,
+      "health_factor_wad": 999565096476407496,
+      "liquidation_protocol_fee_bps": 1000,
+      "reserve_liquidation_bonus_bps": 10500,
+      "total_debt_base_raw": 1499009745
+    },
+    "model_result": {
+      "actual_debt_to_liquidate_raw": 15001159,
+      "base_collateral_raw": 8130062776767344,
+      "bonus_collateral_raw": 406503138838368,
+      "close_factor_bps": 10000,
+      "collateral_seized_base_raw": 1573960231,
+      "collateral_to_liquidator_raw": 8495915601721874,
+      "effective_liquidation_bonus_bps": 10500,
+      "exhausts_selected_collateral": false,
+      "exhausts_selected_debt": true,
+      "gross_collateral_seized_raw": 8536565915605711,
+      "leftover_collateral_base_raw": 231290154,
+      "leftover_debt_base_raw": 0,
+      "liquidation_protocol_fee_collateral_raw": 40650313883837,
+      "max_liquidatable_debt_raw": 15001159,
+      "requested_debt_to_cover_raw": 15001159,
+      "selected_collateral_base_raw": 1805250386,
+      "selected_debt_base_raw": 1499009745
+    }
+  },
+  "limitations": [
+    "The arithmetic replay is conditioned on the debt amount emitted by the event.",
+    "Block-minus-one state cannot represent earlier transactions in the liquidation block.",
+    "One exact event validates this reserve pair and branch, not every Aave V3.7 branch.",
+    "Fork gas can differ because same-block transactions before the target are not replayed."
+  ],
+  "mainnet_fork": {
+    "artifact_path": "reports/mainnet_fork_liquidation.json",
+    "artifact_sha256": "e397f7c5855583445d6b57c9e11861d801f08a0f404be77de331b32af0ae22d0",
+    "event_payload_exact_match": true,
+    "fork_gas_used": 465276,
+    "gas_used_delta": 960,
+    "historical_gas_used": 464316,
+    "passed": true,
+    "status": "passed"
+  },
+  "schema_version": 1,
+  "summary": {
+    "fixed_chain_evidence_verified": true,
+    "high_health_control_reconciled": true,
+    "historical_replay_passed": true,
+    "mainnet_fork_executed": true,
+    "near_account_reconciled": true
+  }
+}

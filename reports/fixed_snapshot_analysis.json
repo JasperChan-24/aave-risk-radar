@@ -25,9 +25,9 @@
     },
     "source_tree": {
       "root": "src/aave_risk_monitor",
-      "sha256": "1a551da7213d1dcb22bbfb4319ce4c79465cca055e8ed2393115113eb3daac58",
+      "sha256": "30b6d84186eb4f04865e2380ead226f37b3e8c15fc579dd94093d70e02c7f84f",
       "algorithm": "sha256-source-tree-v1:path-nul-size-nul-content-nul",
-      "file_count": 20,
+      "file_count": 27,
       "files": [
         "__init__.py",
         "app/__init__.py",
@@ -48,7 +48,14 @@
         "simulation/__init__.py",
         "simulation/calibration.py",
         "simulation/engine.py",
-        "simulation/metrics.py"
+        "simulation/metrics.py",
+        "validation/__init__.py",
+        "validation/_common.py",
+        "validation/backtesting.py",
+        "validation/convergence.py",
+        "validation/fork_replay.py",
+        "validation/liquidation_replay.py",
+        "validation/stress.py"
       ]
     },
     "runtime": {

@@ -1,0 +1,289 @@
+{
+  "schema_version": 1,
+  "policy": "content-addressed-fail-closed-v1",
+  "release": {
+    "tag": "v1.0.0-research",
+    "channel": "prerelease",
+    "evidence_date": "2026-07-21"
+  },
+  "artifacts": [
+    {
+      "role": "fixed_snapshot",
+      "path": "snapshots/1-ed0c6079229e2d407672a117c22b62064f4a4312-block-25573974.json",
+      "bytes": 5871,
+      "sha256": "3feb4f279eddef5383cbaae072d3fdd0c59bcbb801e7f593f92111af1d4690f5"
+    },
+    {
+      "role": "historical_prices",
+      "path": "data/history/ethereum-v3-whale-block-25573974.csv",
+      "bytes": 70535,
+      "sha256": "c1cf01f6d160650d19db29221229daf43335bd65a50160b06199b8ca9c44e0e0"
+    },
+    {
+      "role": "fixed_analysis",
+      "path": "reports/fixed_snapshot_analysis.json",
+      "bytes": 7567,
+      "sha256": "4e51962baaae0254e01f5936fe60b2431040fb5d56bf28c2c16d5ccd24d92772"
+    },
+    {
+      "role": "validation_report",
+      "path": "reports/validation_report.md",
+      "bytes": 13265,
+      "sha256": "42d794b7b14a3c18febe459886ad1c28a7326e370257433c6f43effde81d288c"
+    },
+    {
+      "role": "research_report",
+      "path": "reports/research_report.md",
+      "bytes": 16112,
+      "sha256": "258b9487050ad6f53d086b5da75f1a2de577855694121bc8dc5e621d1eec2b7a"
+    },
+    {
+      "role": "application_screenshot",
+      "path": "docs/assets/aave-risk-monitor.png",
+      "bytes": 693472,
+      "sha256": "2f0e7639b27afb4fb3f431716c2852bcf595d188204637f0470f76badb5abeb4"
+    },
+    {
+      "role": "analysis_generator",
+      "path": "scripts/run_fixed_analysis.py",
+      "bytes": 11143,
+      "sha256": "0ba70bcea677d0bab4460115c7d91182540cffd14acc1a2fcaac606dce7e3821"
+    },
+    {
+      "role": "evidence_verifier",
+      "path": "scripts/verify_evidence.py",
+      "bytes": 43712,
+      "sha256": "00f910ef2aba71a7f522130294b217f8c9683bdacc04f53b0269c930049c4317"
+    },
+    {
+      "role": "evidence_workflow",
+      "path": ".github/workflows/evidence-gate.yml",
+      "bytes": 2514,
+      "sha256": "73975b3d98185cc565e0d6ea63f4f98cd53e69ef48a3d3e411b3803132c8807d"
+    },
+    {
+      "role": "primary_ci_workflow",
+      "path": ".github/workflows/ci.yml",
+      "bytes": 701,
+      "sha256": "70c2b1488a75e0e94bddc03c3b2504adb990e4e48432d050bb4fb882a8401b62"
+    },
+    {
+      "role": "dependency_lock",
+      "path": "requirements-lock.txt",
+      "bytes": 1791,
+      "sha256": "315abfe73e33286afb7bcaf7cdf03c7685d8210fde466a173700c4624955d8e9"
+    },
+    {
+      "role": "project_configuration",
+      "path": "pyproject.toml",
+      "bytes": 1515,
+      "sha256": "76224cce4d5d9fb2cf2072bebc6041354e9c568b5bda6c9be33146ea946dcd76"
+    },
+    {
+      "role": "project_readme",
+      "path": "README.md",
+      "bytes": 13825,
+      "sha256": "233fa16fc3201fd9d13a853d2c566c9d97c82c41e7b92ddeeb1b885a63d56540"
+    },
+    {
+      "role": "empirical_validation",
+      "path": "reports/empirical_validation.json",
+      "bytes": 50573,
+      "sha256": "4af658fbb7283fb8bd971014bcd15f8a4dea9f43e9f6338a19fcae5a9ab9a53d"
+    },
+    {
+      "role": "empirical_validation_generator",
+      "path": "scripts/run_empirical_validation.py",
+      "bytes": 12393,
+      "sha256": "9cdd49458a0a7afb6cdbd3a38c95094c2651100349a2b510049b753236044ec8"
+    },
+    {
+      "role": "liquidation_event_evidence",
+      "path": "data/evidence/aave_v3_ethereum_liquidation_0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f.json",
+      "bytes": 6808,
+      "sha256": "58c06b64ffbd28628bb7ff808cae4bc389b59c8217663e51293813e76129f149"
+    },
+    {
+      "role": "liquidation_prestate_snapshot",
+      "path": "snapshots/1-eb75251694d4d1a71af99b1f96c819dc5e9ed3ea-block-25572181.json",
+      "bytes": 4276,
+      "sha256": "40dcdd3fadc945a194ad371541650c4d5f404652ed1c29e7254497b4c10555de"
+    },
+    {
+      "role": "liquidation_replay_json",
+      "path": "reports/liquidation_replay.json",
+      "bytes": 4763,
+      "sha256": "f8f67e293a9bc7eae2c279536e318821429533a0d3c20ac87059217c177197d5"
+    },
+    {
+      "role": "liquidation_replay_report",
+      "path": "reports/liquidation_replay.md",
+      "bytes": 2952,
+      "sha256": "18e0efdabd81518facf0a5545e5505bf1ae8a2fa4536418cd72dec1fa8e7f4f5"
+    },
+    {
+      "role": "liquidation_capture_generator",
+      "path": "scripts/capture_liquidation_evidence.py",
+      "bytes": 11055,
+      "sha256": "5bb4ba02154350ed871227c5d329d8bee11dbf22a162ed52875c21ef9f1715af"
+    },
+    {
+      "role": "fork_validation_runner",
+      "path": "scripts/run_fork_validation.py",
+      "bytes": 2643,
+      "sha256": "1b7e5a8e64e82fa8a7cc2ee5d3ff9f344561722a83023e6ca3ca3a985941d6dd"
+    },
+    {
+      "role": "mainnet_fork_result",
+      "path": "reports/mainnet_fork_liquidation.json",
+      "bytes": 3578,
+      "sha256": "e397f7c5855583445d6b57c9e11861d801f08a0f404be77de331b32af0ae22d0"
+    }
+  ],
+  "trees": [
+    {
+      "id": "model_source",
+      "root": "src/aave_risk_monitor",
+      "algorithm": "sha256-tree-v1:path-nul-size-nul-content-nul",
+      "include": [
+        "*.py",
+        "**/*.py"
+      ],
+      "exclude": [
+        "**/__pycache__/**",
+        "**/*.pyc"
+      ],
+      "sha256": "30b6d84186eb4f04865e2380ead226f37b3e8c15fc579dd94093d70e02c7f84f",
+      "file_count": 27,
+      "files": [
+        "__init__.py",
+        "app/__init__.py",
+        "app/demo.py",
+        "app/i18n.py",
+        "app/main.py",
+        "app/services.py",
+        "config.py",
+        "data/__init__.py",
+        "data/abis.py",
+        "data/history.py",
+        "data/onchain.py",
+        "data/snapshots.py",
+        "domain.py",
+        "models/__init__.py",
+        "models/liquidation.py",
+        "models/pnl.py",
+        "simulation/__init__.py",
+        "simulation/calibration.py",
+        "simulation/engine.py",
+        "simulation/metrics.py",
+        "validation/__init__.py",
+        "validation/_common.py",
+        "validation/backtesting.py",
+        "validation/convergence.py",
+        "validation/fork_replay.py",
+        "validation/liquidation_replay.py",
+        "validation/stress.py"
+      ]
+    },
+    {
+      "id": "offline_test_evidence",
+      "root": "tests",
+      "algorithm": "sha256-tree-v1:path-nul-size-nul-content-nul",
+      "include": [
+        "*.py",
+        "**/*.py",
+        "fixtures/*",
+        "fixtures/**/*"
+      ],
+      "exclude": [
+        "**/__pycache__/**",
+        "**/*.pyc"
+      ],
+      "sha256": "7b2f3b7b335571891225e8880ab0b9ec7abfee2cd9ab8a2ad70392c0836593d2",
+      "file_count": 15,
+      "files": [
+        "fixtures/portfolio_snapshot.json",
+        "fixtures/prices.csv",
+        "test_app_services.py",
+        "test_app_smoke.py",
+        "test_empirical_validation.py",
+        "test_evidence_gate.py",
+        "test_fixed_analysis_artifact.py",
+        "test_history.py",
+        "test_liquidation.py",
+        "test_liquidation_replay.py",
+        "test_mainnet_fork_liquidation.py",
+        "test_mainnet_integration.py",
+        "test_pnl.py",
+        "test_portfolio.py",
+        "test_simulation.py"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "fixed_input_integrity",
+      "evidence_roles": [
+        "fixed_snapshot",
+        "historical_prices",
+        "fixed_analysis",
+        "analysis_generator"
+      ]
+    },
+    {
+      "id": "model_validation",
+      "evidence_roles": [
+        "validation_report",
+        "empirical_validation",
+        "liquidation_replay_json",
+        "mainnet_fork_result"
+      ]
+    },
+    {
+      "id": "research_scope",
+      "evidence_roles": [
+        "research_report",
+        "project_readme",
+        "validation_report"
+      ]
+    },
+    {
+      "id": "user_interface",
+      "evidence_roles": [
+        "application_screenshot",
+        "project_readme"
+      ]
+    },
+    {
+      "id": "continuous_verification",
+      "evidence_roles": [
+        "evidence_verifier",
+        "evidence_workflow",
+        "primary_ci_workflow",
+        "dependency_lock",
+        "project_configuration"
+      ]
+    },
+    {
+      "id": "empirical_convergence_and_stress",
+      "evidence_roles": [
+        "fixed_snapshot",
+        "historical_prices",
+        "empirical_validation",
+        "empirical_validation_generator"
+      ]
+    },
+    {
+      "id": "liquidation_replay_and_fork",
+      "evidence_roles": [
+        "liquidation_event_evidence",
+        "liquidation_prestate_snapshot",
+        "liquidation_replay_json",
+        "liquidation_replay_report",
+        "liquidation_capture_generator",
+        "fork_validation_runner",
+        "mainnet_fork_result"
+      ]
+    }
+  ]
+}

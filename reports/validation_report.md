@@ -31,6 +31,23 @@ needed for a stronger empirical claim. It is an evidence index, not an external 
 - Snapshot JSON does not contain simulation configuration or a seed. Those values are attached to
   the simulation result and shown by the app, so reproducing an exported numerical result also
   requires recording those displayed settings.
+- The machine-readable
+  [`reports/empirical_validation.json`](empirical_validation.json) binds the same snapshot and
+  366-observation history by SHA-256. It compares 1/0.5/0.25-day grids, 2,000/8,000/32,000 paths,
+  and 90/180/365-day calibration windows; runs 185 strictly rolling one-day 95% VaR forecasts;
+  and records permanent USDT price shocks plus covariance-matched Student-t innovations. The
+  observed block-`25,573,974` account is the high-HF control (`HF=4.2733`). The convergence and
+  stress portfolio at `HF=1.05` is explicitly synthetic and is not presented as an observed user.
+- The fixed
+  [`reports/liquidation_replay.json`](liquidation_replay.json) and
+  [`reports/liquidation_replay.md`](liquidation_replay.md) bind an observed revision-11 borrower
+  at block `25,572,181`, with `HF=0.999565096476407496`, to the successful liquidation in
+  Ethereum transaction
+  [`0xd138…ab62f`](https://etherscan.io/tx/0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f)
+  one block later. The model matches the event's `15,001,159` raw USDT repayment and
+  `8,495,915,601,721,874` raw WETH delivered to the liquidator exactly. The original signed
+  transaction also succeeds on a block-minus-one Anvil mainnet fork with an identical
+  `LiquidationCall` payload; the fork receipt's gas usage is evidence, not a gas-model target.
 
 ## Implemented automated checks
 
@@ -44,6 +61,9 @@ needed for a stronger empirical claim. It is an evidence index, not an external 
 | Liquidator P&L and quote boundaries | [`tests/test_pnl.py`](../tests/test_pnl.py) covers cost decomposition, optional execution/MEV cost, break-even, flash-premium rounding, fixed quotes, read-only 0x firm-pricing response parsing, fee handling, unavailable liquidity, and failure propagation. |
 | App orchestration and fail-closed guards | [`tests/test_app_services.py`](../tests/test_app_services.py) covers asset-keyed shocks, seeded simulation wiring, history integrity, incomplete eMode metadata, integer HF eligibility, unsupported Pool revisions, oracle-base assumptions, pause/grace/flash-loan/actual-and-virtual-liquidity guards, same-asset callback ordering, conservative gas rounding, and P&L inputs. [`tests/test_app_smoke.py`](../tests/test_app_smoke.py) renders the default demo offline. |
 | Fixed-block RPC consistency | [`tests/test_mainnet_integration.py`](../tests/test_mainnet_integration.py) is opt-in and compares live archive-RPC reads at the pinned block with the checked-in snapshot. The reader also rejects a block hash that changes during capture. The integration test is skipped unless explicitly enabled. |
+| Empirical convergence, backtest, and stress evidence | [`tests/test_empirical_validation.py`](../tests/test_empirical_validation.py) covers deterministic grid/path/window studies, look-ahead rejection, known Kupiec and Christoffersen behavior, covariance-matched Student-t sampling, role-sensitive stablecoin shocks, and artifact/input hash integrity. |
+| Observed liquidation replay and mainnet fork | [`tests/test_liquidation_replay.py`](../tests/test_liquidation_replay.py) decodes the fixed raw log, reconciles the near-HF and high-HF controls, and requires zero raw-unit event/model deltas. [`tests/test_mainnet_fork_liquidation.py`](../tests/test_mainnet_fork_liquidation.py) fails closed without its runtime and, when explicitly enabled, replays the original signed transaction on block-minus-one state and compares the fork event with both history and model. |
+| Content-addressed release gate | [`tests/test_evidence_gate.py`](../tests/test_evidence_gate.py) verifies that artifact, source, test, screenshot, account/block, event/model, and fork bindings fail closed when missing or modified. The same verifier runs in [Evidence Gate](../.github/workflows/evidence-gate.yml) for pull requests, `main`, and published releases. |
 
 Run the offline suite and static checks with:
 
@@ -53,11 +73,14 @@ ruff check .
 ruff format --check .
 mypy src/aave_risk_monitor
 pytest --cov=aave_risk_monitor --cov-report=term-missing
+python scripts/verify_evidence.py
 ```
 
-Local release validation on 2026-07-20 completed with `127 passed, 1 skipped`, total branch
-coverage `84.46%`, and no Ruff, formatting, mypy, or dependency-consistency failures. The
-separately enabled fixed-block RPC integration check completed with `1 passed`.
+Local release validation on 2026-07-21 completed with `148 passed, 2 skipped`, total branch
+coverage `81.16%`, and no Ruff, formatting, mypy, dependency-consistency, deterministic-artifact,
+or Evidence Gate failures. One skip is the opt-in fixed-block RPC check and one is the opt-in
+mainnet-fork check; each was also enabled and passed separately. CI repeats the offline suite,
+static checks, dependency check, and content-addressed verifier independently on `main`.
 
 Run the archive-RPC check only when a suitable Ethereum RPC URL is configured:
 
@@ -74,6 +97,15 @@ python scripts/run_fixed_analysis.py \
   --output reports/fixed_snapshot_analysis.json
 ```
 
+Regenerate the empirical evidence and execute the opt-in fork replay with:
+
+```bash
+python scripts/run_empirical_validation.py
+RUN_MAINNET_FORK=1 \
+ANVIL_COMMAND="npx --yes @foundry-rs/anvil@1.7.1" \
+python scripts/run_fork_validation.py
+```
+
 For the exact package versions from the local macOS/Python 3.12 validation run, install
 [`requirements-lock.txt`](../requirements-lock.txt) and then install the local project with
 `--no-deps`.
@@ -83,7 +115,8 @@ For the exact package versions from the local macOS/Python 3.12 validation run, 
 - Liquidation probability and TTL use discrete daily first passage. They can miss an intraday
   crossing and do not establish continuous-time barrier accuracy. The implementation applies an
   eight-ULP guard below `HF=1` solely to avoid a floating-point summation false positive at an
-  algebraically exact boundary.
+  algebraically exact boundary. The checked-in 1/0.5/0.25-day experiment demonstrates numerical
+  stability at its recorded tolerances, not convergence to an analytical continuous-time limit.
 - VaR and ES are based on fixed supplied/borrowed quantities and terminal mark-to-market net
   equity. A liquidated path is not transitioned through debt repayment, collateral seizure,
   execution costs, or subsequent account evolution.
@@ -91,6 +124,16 @@ For the exact package versions from the local macOS/Python 3.12 validation run, 
   initially liquidatable state instead has a deterministic `[1,1]` interval. None of these
   intervals includes parameter uncertainty, data-window choice, model misspecification, jumps,
   oracle latency, or liquidity feedback.
+- The rolling VaR backtest fixes the current account's token quantities and revalues them through
+  historical prices; it does not reconstruct the borrower's historical balances. Of 185 one-day
+  forecasts it records 11 breaches versus 9.25 expected. Kupiec unconditional coverage passes
+  (`p=0.566`), but Christoffersen independence fails (`p=0.00135`), so the aggregate statistical
+  acceptance result is intentionally false and indicates clustered exceptions.
+- The USDT shocks are role-sensitive permanent price jumps; because USDT is debt in this account,
+  a downward price break improves HF while a `+10%` break is adverse and makes the synthetic
+  portfolio initially liquidatable. The Student-t(df=5) experiment matches innovation covariance
+  but is not a fitted return-distribution claim; in this seeded run its 99% ES is about 0.99%
+  above the Gaussian baseline while its VaR is slightly lower.
 - The optional 0x adapter obtains a read-only AllowanceHolder firm pricing quote, parses pricing
   fields, and discards transaction calldata. No allowance or transaction is submitted, and the
   result is not an execution guarantee. The adapter does not claim a separately validated
@@ -100,18 +143,22 @@ For the exact package versions from the local macOS/Python 3.12 validation run, 
   spanning an oracle migration must be segmented and validated separately.
 - The revision-11 liquidator model validates economically relevant unscaled repayment and
   seizure amount math. It does not reproduce scaled aToken settlement, liquidity-index/Ray
-  rounding, or the fee-cap end state, so forked execution may differ at raw-unit boundaries.
+  rounding, or the fee-cap end state. One observed small-position/full-close WETH/USDT event and
+  its fork replay match exactly, but this does not establish equivalence for other branches.
 - The fixed snapshot validates one account, one market, one Pool revision, and one block. It does
   not substitute for cross-market or post-upgrade validation.
 
 ## Validation roadmap
 
-Not yet implemented:
+Remaining work:
 
-1. Analytical or fine-grid first-passage benchmarks and explicit time-step convergence.
-2. Path-count, calibration-window, and bootstrap-resample convergence reports.
-3. Rolling out-of-sample VaR exception backtests.
-4. Historical/heavy-tailed resampling for crash, stablecoin-depeg, and oracle-latency regimes.
+1. Analytical first-passage benchmarks or grids finer than 0.25 day to establish a stronger
+   continuous-time reference.
+2. Bootstrap-resample convergence and explicit parameter-uncertainty intervals.
+3. Rolling backtests with historically reconstructed account balances, alternative VaR models,
+   and remediation of the observed breach clustering.
+4. Historical crash/oracle-latency episode replay and fitted regime or jump models; the current
+   stablecoin and Student-t exercises are disclosed sensitivity scenarios.
 5. Systematic local/global sensitivity analysis.
 6. Forked `liquidationCall` comparisons across more reserve pairs, accounts, markets, and Pool
    revisions, including scaled-balance, liquidity-index/Ray-rounding, and fee-cap end-state

@@ -1,5 +1,18 @@
 # Fixed snapshots
 
+Two observed Ethereum Aave V3 accounts are pinned for complementary validation:
+
+- `1-ed0c6079229e2d407672a117c22b62064f4a4312-block-25573974.json` is the
+  high-health control (`HF=4.273322048891862594`) used by the fixed simulation and rolling VaR
+  evidence.
+- `1-eb75251694d4d1a71af99b1f96c819dc5e9ed3ea-block-25572181.json` is the
+  observed near-liquidation state (`HF=0.999565096476407496`) one block before the successful
+  revision-11 liquidation in Ethereum transaction
+  [`0xd138…ab62f`](https://etherscan.io/tx/0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f).
+
+The second snapshot is bound to the raw event, exact model replay, and executed mainnet-fork
+evidence in [`../reports/liquidation_replay.md`](../reports/liquidation_replay.md).
+
 `1-ed0c6079229e2d407672a117c22b62064f4a4312-block-25573974.json` is a read-only
 Ethereum mainnet Aave V3 snapshot captured at block `25,573,974`
 (`2026-07-20T12:37:59Z`). It contains public on-chain state only; no RPC URL,

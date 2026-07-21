@@ -1,0 +1,73 @@
+{
+  "checks": {
+    "event_topics_and_data_match_exactly": true,
+    "fork_block_matches_historical_block": true,
+    "fork_collateral_matches_historical_event": true,
+    "fork_collateral_matches_model": true,
+    "fork_debt_matches_historical_event": true,
+    "fork_debt_matches_model": true,
+    "fork_receipt_status_is_one": true,
+    "replay_transaction_hash_matches_historical": true
+  },
+  "event_payload_exact_match": true,
+  "fork": {
+    "block_number": 25572182,
+    "chain_id": 1,
+    "gas_used": 465276,
+    "log_count": 17,
+    "receipt_status": 1,
+    "replay_transaction_hash": "0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f",
+    "source_block_hash": "0xdfefe9271521359788c2e52c5f1dc5a4cb6b969ad6d4464f188335d372d5d731",
+    "source_block_number": 25572181
+  },
+  "fork_event": {
+    "collateral_asset": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "data": "0x0000000000000000000000000000000000000000000000000000000000e4e647000000000000000000000000000000000000000000000000001e2efd7f7b7a120000000000000000000000003169e4e2f903062b0cf7f2db4eb1dc665412cc5d0000000000000000000000000000000000000000000000000000000000000000",
+    "debt_asset": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "debt_to_cover_raw": 15001159,
+    "liquidated_collateral_amount_raw": 8495915601721874,
+    "liquidator": "0x3169e4E2f903062B0CF7f2DB4eb1dC665412cc5D",
+    "log_index": 13,
+    "pool_address": "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+    "receive_a_token": false,
+    "topics": [
+      "0xe413a321e8681d831f4dbccbca790d2952b56f977908e45be37335533e005286",
+      "0x000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "0x000000000000000000000000dac17f958d2ee523a2206206994597c13d831ec7",
+      "0x000000000000000000000000eb75251694d4d1a71af99b1f96c819dc5e9ed3ea"
+    ],
+    "user": "0xeB75251694d4D1a71aF99B1F96C819Dc5E9eD3Ea"
+  },
+  "gas_comparison": {
+    "explanation": "The block-minus-one fork does not replay the target block's 23 preceding transactions; warm/cold state can therefore change gas without changing event semantics.",
+    "fork_gas_used": 465276,
+    "gas_used_delta": 960,
+    "historical_gas_used": 464316
+  },
+  "historical_event": {
+    "collateral_asset": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "data": "0x0000000000000000000000000000000000000000000000000000000000e4e647000000000000000000000000000000000000000000000000001e2efd7f7b7a120000000000000000000000003169e4e2f903062b0cf7f2db4eb1dc665412cc5d0000000000000000000000000000000000000000000000000000000000000000",
+    "debt_asset": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "debt_to_cover_raw": 15001159,
+    "liquidated_collateral_amount_raw": 8495915601721874,
+    "liquidator": "0x3169e4E2f903062B0CF7f2DB4eb1dC665412cc5D",
+    "log_index": 218,
+    "pool_address": "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+    "receive_a_token": false,
+    "topics": [
+      "0xe413a321e8681d831f4dbccbca790d2952b56f977908e45be37335533e005286",
+      "0x000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "0x000000000000000000000000dac17f958d2ee523a2206206994597c13d831ec7",
+      "0x000000000000000000000000eb75251694d4d1a71af99b1f96c819dc5e9ed3ea"
+    ],
+    "user": "0xeB75251694d4D1a71aF99B1F96C819Dc5E9eD3Ea"
+  },
+  "historical_transaction_hash": "0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f",
+  "model_result": {
+    "actual_debt_to_liquidate_raw": 15001159,
+    "collateral_to_liquidator_raw": 8495915601721874
+  },
+  "passed": true,
+  "schema_version": 1,
+  "status": "executed"
+}

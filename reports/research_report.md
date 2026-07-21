@@ -90,7 +90,9 @@ the discrete first-passage time. To prevent binary floating-point portfolio summ
 turning an algebraically exact \(HF=1\) into a false breach, the implementation uses an explicit
 eight-ULP guard immediately below the barrier; economically material breaches remain strict.
 This daily model should not be interpreted as an intraday liquidation clock; time-step
-sensitivity remains on the future validation roadmap.
+sensitivity is measured separately on 1/0.5/0.25-day grids. The two finest grids satisfy the
+checked-in probability, VaR, and ES tolerances, but that finite-grid comparison is not an
+analytical continuous-time proof.
 
 ### 2.2 Risk outputs
 
@@ -173,6 +175,13 @@ The checked-in tests and fixed artifacts currently cover:
 6. P&L cost decomposition, flash-premium rounding, break-even output, and validation/failure
    paths for fixed quotes and read-only 0x firm-pricing inputs.
 7. Offline Streamlit smoke coverage and an opt-in, fixed-block Ethereum RPC integration check.
+8. Deterministic time-step, path-count, and calibration-window convergence studies; a strictly
+   rolling one-day 95% VaR exception backtest; permanent stablecoin price shocks; and a
+   covariance-matched Student-t(df=5) sensitivity run.
+9. A fixed observed revision-11 borrower one block before liquidation (`HF=0.999565096476407496`),
+   an observed high-HF control, an exact raw-unit comparison with the historical
+   `LiquidationCall`, and a replay of the original signed transaction on block-minus-one Anvil
+   mainnet state.
 
 The concrete fixtures, test-file mapping, and commands are recorded in
 [validation_report.md](validation_report.md).
@@ -185,18 +194,35 @@ input hashes, censoring counts, and VaR/ES intervals are stored in
 [`fixed_snapshot_analysis.json`](fixed_snapshot_analysis.json). A zero observed count is not a
 claim of zero true risk.
 
+The [empirical validation artifact](empirical_validation.json) records the acceptance thresholds
+instead of summarizing the run as a blanket pass. The time-step, path-count, and
+calibration-window comparisons pass. The 185-observation rolling VaR study records 11 breaches
+versus 9.25 expected: Kupiec unconditional coverage passes (`p=0.566`), while Christoffersen
+independence fails (`p=0.00135`). The breach clustering is therefore a model-validation finding,
+not a result to tune away.
+
+The [liquidation replay](liquidation_replay.md) uses Ethereum transaction
+[`0xd138…ab62f`](https://etherscan.io/tx/0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f).
+At raw-token precision, the revision-11 arithmetic reproduces both `15,001,159` USDT repaid and
+`8,495,915,601,721,874` WETH delivered to the liquidator with zero delta. The same original
+signed transaction succeeds on the pinned block-minus-one fork and emits an identical
+`LiquidationCall`. This validates one WETH/USDT small-position/full-close observation, not every
+liquidation branch or transaction end state.
+
 ### 4.2 Future validation work
 
-The following are research objectives, not claims about the current release:
+The following remain research objectives, not claims about the current release:
 
-1. Compare single-asset first-passage estimates with analytical and finer-grid benchmarks.
-2. Publish path-count, calibration-window, time-step, and bootstrap-resample convergence studies.
-3. Backtest VaR exceptions on rolling out-of-sample windows.
-4. Compare Gaussian Monte Carlo against historical and heavy-tailed resampling for crash,
-   stablecoin-depeg, and oracle-latency episodes.
+1. Compare single-asset first-passage estimates with analytical benchmarks and grids finer than
+   0.25 day.
+2. Add bootstrap-resample convergence and parameter-uncertainty intervals.
+3. Reconstruct historical account balances for rolling VaR tests, compare alternative models,
+   and address the observed exception clustering.
+4. Replay historical crash and oracle-latency episodes and fit regime or jump models; the current
+   stablecoin and Student-t runs are sensitivity scenarios rather than fitted histories.
 5. Run systematic local/global sensitivity analysis across volatility, correlation, drift,
    liquidity, gas, and execution-haircut assumptions.
-6. Compare liquidation outputs with forked `liquidationCall` executions across more markets and
+6. Compare liquidation outputs with more forked `liquidationCall` executions across markets and
    future Pool revisions, including scaled aToken settlement, liquidity-index/Ray rounding, and
    fee-cap end-state differences.
 
@@ -204,13 +230,17 @@ The following are research objectives, not claims about the current release:
 
 The model assumes the snapshot's collateral settings and token quantities remain constant over
 the forecast horizon, so interest accrual is omitted. Gaussian innovations underrepresent jumps,
-liquidity spirals, oracle latency, and stablecoin depegs. Formal historical stress tests and
-sensitivity studies have not yet been implemented; they are future validation work, not
-companions to the current base estimate. Daily monitoring can miss intraday barrier crossings.
+liquidity spirals, oracle latency, and stablecoin depegs. The Student-t and permanent stablecoin
+shocks probe selected sensitivities but are not fitted regime models. The rolling VaR study also
+holds today's token quantities fixed at historical prices rather than reconstructing historical
+positions, and its independence test rejects unclustered exceptions. Daily monitoring can miss
+intraday barrier crossings.
 The optional 0x input is a short-lived, read-only firm pricing quote whose calldata is discarded;
 it is neither a submitted trade nor an execution guarantee. VaR/ES are fixed-quantity terminal
 mark-to-market metrics and do not model post-trigger balance changes. The historical panel
 assumes the snapshot oracle address remained active throughout its window, and the liquidator
-adapter does not simulate scaled aToken/liquidity-index/Ray settlement or a complete transaction
-end state. Finally, protocol upgrades can alter liquidation semantics, so unknown Pool revisions
-fail closed until their arithmetic is validated.
+adapter does not simulate scaled aToken/liquidity-index/Ray settlement or every complete
+transaction end state. The one exact event/fork comparison cannot be generalized to other
+reserves, eMode, collateral-capped, dust, or fee-cap branches. Finally, protocol upgrades can
+alter liquidation semantics, so unknown Pool revisions fail closed until their arithmetic is
+validated.

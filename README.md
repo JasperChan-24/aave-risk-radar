@@ -1,5 +1,19 @@
 # Aave Whale Risk Monitor
 
+[![CI](https://github.com/JasperChan-24/aave-risk-radar/actions/workflows/ci.yml/badge.svg)](https://github.com/JasperChan-24/aave-risk-radar/actions/workflows/ci.yml)
+[![Evidence Gate](https://github.com/JasperChan-24/aave-risk-radar/actions/workflows/evidence-gate.yml/badge.svg)](https://github.com/JasperChan-24/aave-risk-radar/actions/workflows/evidence-gate.yml)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-3120/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+[Live Streamlit app](https://jasper-aave-radar.streamlit.app/) ·
+[Fixed analysis artifact](reports/fixed_snapshot_analysis.json) ·
+[Empirical validation](reports/empirical_validation.json) ·
+[Liquidation replay](reports/liquidation_replay.md) ·
+[Validation evidence](reports/validation_report.md) ·
+[Research report](reports/research_report.md)
+
+![Aave Whale Risk Monitor dashboard](docs/assets/aave-risk-monitor.png)
+
 Asset-level liquidation-risk research for Aave V3 on Ethereum.
 
 The dashboard reconstructs a borrower's position reserve by reserve, calibrates a correlated
@@ -51,7 +65,8 @@ provenance.
   liquidation bonus, protocol fee, and position value.
 - Reconstructed health factor with a same-block comparison to `getUserAccountData`.
 - User-specified, independent asset shocks for deterministic scenario analysis. This is not a
-  calibrated historical stress-testing or sensitivity-analysis suite.
+  substitute for the separately checked-in convergence, rolling VaR backtest, stablecoin-jump,
+  and covariance-matched heavy-tail evidence.
 - 1-, 7-, and 30-day liquidation probability with a 95% Wilson interval for simulated future
   events; an initially liquidatable snapshot instead has the deterministic interval `[1,1]`.
   First passage remains strict below `HF=1`, with a disclosed eight-ULP guard against binary
@@ -71,8 +86,9 @@ revision 11/v3.7 and fails closed for unsupported semantics. Its liquidation ada
 the economically relevant **unscaled** debt-repayment and collateral-seizure amount arithmetic
 used by the P&L model. It is not a byte-for-byte `liquidationCall` emulator: the snapshot and
 model do not reproduce scaled aToken balance settlement, liquidity-index/Ray rounding, or the
-fee-cap end state. Those mechanics can matter at raw-unit boundaries and remain targets for
-fork-based validation. Aave's
+fee-cap end state. Those mechanics can matter at raw-unit boundaries. One observed WETH/USDT
+revision-11 liquidation is replayed exactly against both its historical `LiquidationCall` and a
+block-minus-one mainnet fork; broader reserve-pair and branch coverage remains future work. Aave's
 [view contracts](https://aave.com/docs/aave-v3/smart-contracts/view-contracts),
 [oracle interface](https://aave.com/docs/aave-v3/smart-contracts/oracles), and
 [v3.7 liquidation changes](https://github.com/aave-dao/aave-v3-origin/blob/main/docs/3.7/Aave-v3.7-changelog.md)
@@ -117,6 +133,7 @@ ruff check .
 ruff format --check .
 mypy src/aave_risk_monitor
 pytest --cov=aave_risk_monitor --cov-report=term-missing
+python scripts/verify_evidence.py
 ```
 
 Unit tests are offline and deterministic. RPC integration tests are marked `integration` and
@@ -181,6 +198,33 @@ The resulting [machine-readable analysis artifact](reports/fixed_snapshot_analys
 zero 30-day liquidation-frequency point estimate for this high-HF account, but its Wilson 95%
 upper bound is non-zero; this is not evidence that liquidation risk is literally zero.
 
+Generate the deterministic convergence, rolling out-of-sample VaR, stablecoin-jump, and
+covariance-matched Student-t evidence with:
+
+```bash
+python scripts/run_empirical_validation.py
+```
+
+The checked-in [empirical report](reports/empirical_validation.json) uses an observed high-HF
+account as a control and a clearly disclosed synthetic `HF=1.05` portfolio for sensitivity.
+Time-step, path-count, and calibration-window checks pass their recorded tolerances. The rolling
+95% VaR backtest does **not** pass all acceptance checks: unconditional coverage passes, while
+the independence test detects clustered breaches. This negative result is part of the release
+evidence, not tuned away.
+
+The [historical liquidation replay](reports/liquidation_replay.md) pins an observed account at
+`HF=0.999565096476407496`, one block before Ethereum transaction
+[`0xd138…ab62f`](https://etherscan.io/tx/0xd138a0455f087ad399820fb42f4fd35ca8f8986c223609afabf1cba1ffdab62f).
+The model matches the event's USDT repayment and WETH delivered to the liquidator with zero
+raw-unit delta. With an archive RPC and Anvil, reproduce the original signed transaction on a
+block-minus-one mainnet fork with:
+
+```bash
+RUN_MAINNET_FORK=1 \
+ANVIL_COMMAND="npx --yes @foundry-rs/anvil@1.7.1" \
+python scripts/run_fork_validation.py
+```
+
 ## Project layout
 
 ```text
@@ -188,6 +232,7 @@ src/aave_risk_monitor/
 ├── data/          # Aave/Oracle reads, historical observations, snapshots
 ├── models/        # Portfolio health, liquidation rules, liquidator P&L
 ├── simulation/    # Calibration, correlated paths, risk metrics
+├── validation/    # Convergence, backtests, stresses, historical/fork replay
 └── app/           # Streamlit presentation and orchestration
 tests/             # Golden cases, statistical tests, offline fixtures
 reports/           # Research methodology, validation evidence, limitations
@@ -202,10 +247,13 @@ crossings; Gaussian dynamics can understate jumps, stablecoin depegs, and liquid
 quotes can expire; and MEV competition or state changes can make a theoretically profitable
 liquidation fail. Confidence intervals describe simulation sampling uncertainty, not complete
 model uncertainty. VaR/ES stop at the horizon mark-to-market state and do not model the
-balance-sheet transition, execution loss, or feedback effects after liquidation. Formal
-historical stress studies, global sensitivity analysis, out-of-sample VaR backtests, and
-time-step convergence studies remain future work. The revision-11 P&L adapter models unscaled
-amounts, not scaled aToken/liquidity-index/Ray settlement or a forked transaction end state.
+balance-sheet transition, execution loss, or feedback effects after liquidation. The rolling
+VaR study uses today's fixed token quantities at historical prices rather than reconstructed
+historical balances, and its breach-independence check fails. The heavy-tail and stablecoin
+experiments are sensitivity scenarios, not fitted regime models. Systematic global sensitivity
+analysis remains future work. The revision-11 P&L adapter models unscaled amounts; the one fork
+replay does not establish full scaled aToken/liquidity-index/Ray or fee-cap equivalence across
+all branches.
 Read the full
 [research report](reports/research_report.md) before interpreting results.
 
